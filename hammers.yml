@@ -1,0 +1,144 @@
+#for color codes use &
+
+#hammername: name of the hammer for commands
+#  name: Item Name
+#  type: item the hammer should be
+#  data: set item data such as color or damage
+#  enchanted: should the hammer have the enchanted glow
+#  amount: how much should the hammer fix
+#  consume: should the hammer be consumed when used
+#  cost:
+#    use: cost to used
+#    buy: cost to buy
+#  shop:
+#    row: location top to bottom
+#    column: location left to right
+#  fixall: should the hammer fix all items in the inventory or only the clicked item
+#  lore: what lore should the hammer have
+#  use: message sent to the player when they use the hammer
+#  cantuse: message sent to the player when they can't use the hammer
+#  listgive:
+#    can: message if they can give the hammer
+#    cant: message if they can't give the hammer and have hammers.listall
+
+
+#this hammer is test1 so to give it in game the command would be /rh give <player> test1
+test1:
+  #name is the name the hammer item will have in game
+  name: Test hammer number 1
+  #type is what item the hammer is
+  type: IRON_INGOT
+  #set the data for the hammer
+  data: 0
+  #should the hammer glow
+  enchanted: true
+  #amount is how much the hammer will fix the item you can have it
+  #a number to fix a set amount of points to fix 50 points of damage
+  #amount: 50
+  #or you can have a percent
+  #amount: 50%
+  amount: 50%
+  #when a player uses the hammers should it be remove
+  #true - hammer is destroyed on use
+  #false - you can use the hammer more than once
+  consume: true
+  #cost is the cost to buy or use the hammer
+  #if you are not using vault make sure to set both to 0 or 0.0 or you will get warnings
+  cost:
+    #cost to buy the hammer with /hammers buy test1 or from /hammershop
+    buy: 100.0
+    #cost to use the hammer
+    use: 0.0
+  #shop settiing are only used if shop.default is set to false in the config.yml
+  shop:
+    #the top row is 0
+    #should be a value between 0 and one less than shop.size from config.yml
+    row: 1
+    #the left most column is column 0 value should be 0-8
+    column: 1
+  #should the hammer fix only the clicked item (false) or
+  #should it fix all items in the players inventory and armor (true)
+  fixall: false
+  #what item list should this hammer be able to fix
+  #fix lists can be setup in config.yml
+  fixlist: all
+  #lore the item should have you can add as many lines as you want
+  #if you don't want the hammer to have lore
+  #lore: []
+  lore:
+  - This hammer fixes one item by 50%
+  - line 2
+  #messages sent to the player when they use the hammer
+  #you can add as many lines as you want
+  #to not send a message use
+  #use: []
+  use:
+  - you have used a hammer
+  #messages sent to the player when they try to use this hammer
+  #you can add as many lines as you want
+  #to not send a message use
+  #cantuse: []
+  cantuse:
+  - you can't use this hammer.
+  #how should the hammer look in /rh list
+  listgive:
+    #how it should look if the sender can buy this hammer
+    can: '&2test1&8 - &7repairs one item by 50%'
+    #how it should look if the sender can't buy this hammer
+    #this is only show if the sender has the permission hammers.listall
+    cant: '&4test1&8 - &7repairs one item by 50%'
+
+#here is the start of the next hammer it is hammer2
+#the command to give it is /rh give <player> hammer2
+hammer2:
+  name: Fix all hammer
+  type: GOLD_INGOT
+  data: 0
+  enchanted: true
+  amount: 50
+  consume: true
+  cost:
+    buy: 1000.0
+    use: 0.0
+  shop:
+    row: 1
+    column: 4
+  fixall: true
+  fixlist: all
+  lore:
+  - '&1This hammer fixes all items in you inventory'
+  use:
+  - you used a fix all hammer
+  cantuse:
+  - you can't use this hammer.
+  listgive:
+    can: '&2hammer2&8 - &7repairs all items by 50'
+    cant: '&4hammer2&8 - &7repairs all items by 50'
+
+#here is the third hammer
+swordhammer1:
+  name: Sword hammer
+  type: IRON_INGOT
+  data: 0
+  enchanted: true
+  amount: 100%
+  consume: true
+  cost:
+    buy: 50.0
+    use: 50.0
+  shop:
+    row: 1
+    column: 7
+  fixall: false
+  fixlist: swords
+  lore:
+  - '&1This hammer fixes one sword'
+  use:
+  - you used a sword hammer
+  cantuse:
+  - you can't use this hammer.
+  listgive:
+    can: '&2swordhammer1&8 - &7repairs one sword by 100%'
+    cant: '&4swordhammer1&8 - &7repairs one sword by 100%'
+
+#you can add as many as you want

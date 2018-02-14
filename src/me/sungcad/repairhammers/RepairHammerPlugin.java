@@ -1,0 +1,83 @@
+/*
+ * 
+ *  Copyright (C) 2018  Sungcad
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+package me.sungcad.repairhammers;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import me.sungcad.repairhammers.commands.HammerCommand;
+import me.sungcad.repairhammers.commands.HammerShopCommand;
+import me.sungcad.repairhammers.commands.HammerTabCompleter;
+import me.sungcad.repairhammers.hammers.HammerController;
+import me.sungcad.repairhammers.hooks.VaultHook;
+import me.sungcad.repairhammers.listeners.InventoryClickListener;
+import me.sungcad.repairhammers.listeners.RightClickListener;
+
+public class RepairHammerPlugin extends JavaPlugin {
+	HammerController hammers;
+	VaultHook economy;
+	NumberFormat money;
+
+	@Override
+	public void onEnable() {
+		saveDefaultConfig();
+		Files.HAMMER.load(this);
+		money = new DecimalFormat(getConfig().getString("format"));
+		hammers = new HammerController(this);
+		economy = new VaultHook(this);
+		setupCommands();
+		setupListeners();
+	}
+
+	@Override
+	public void onDisable() {
+
+	}
+
+	public HammerController getHammerController() {
+		return hammers;
+	}
+
+	public VaultHook getEconomy() {
+		return economy;
+	}
+
+	public NumberFormat getFormat() {
+		return money;
+	}
+
+	public void reloadFormat() {
+		money = new DecimalFormat(getConfig().getString("format"));
+	}
+
+	void setupCommands() {
+		getCommand("hammer").setExecutor(new HammerCommand(this));
+		getCommand("hammer").setTabCompleter(new HammerTabCompleter(this));
+		getCommand("hammershop").setExecutor(new HammerShopCommand(this));
+	}
+
+	void setupListeners() {
+		boolean type = getConfig().getString("use", "inventory").equalsIgnoreCase("rightclick");
+		Bukkit.getPluginManager().registerEvents(new InventoryClickListener(this, !type), this);
+		Bukkit.getPluginManager().registerEvents(new RightClickListener(this, type), this);
+	}
+}

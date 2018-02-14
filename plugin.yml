@@ -1,0 +1,69 @@
+name: RepairHammers
+author: Sungcad
+website: https://www.spigotmc.org/resources/repair-hammers.44699/
+main: me.sungcad.repairhammers.RepairHammerPlugin
+version: 1.0.9
+softdepend:
+  - Vault
+  - RPGItems
+  - AdditionsAPI
+commands:
+  hammer:
+    description: base command for Repair Hammers
+    permission: hammers.command
+    aliases:
+      - rh
+      - hammers
+  hammershop:
+    description: opens up the hammer shop gui
+    permission: hammers.shop
+    aliases:
+      - rhshop
+      - hammersshop
+permissions:
+  hammers.admin:
+    description: Gives access to all Repair hammer commands and hammers
+    children:
+      hammers.buyall: true
+      hammers.giveall: true
+      hammers.help: true
+      hammers.info: true
+      hammers.listall: true
+      hammers.reload: true
+      hammers.shop: true
+  hammers.buy:
+    description: Gives access to buy hammers
+    children:
+      hammers.command: true
+  hammers.buyall:
+    description: Gives access to buy all hammers
+    children:
+      hammers.buy: true
+  hammers.listall:
+    description: Gives access to list all hammers
+    children:
+      hammers.list: true
+  hammers.giveall:
+    description: Gives access to give all hammers
+    children:
+      hammers.give: true
+  hammers.list:
+    description: Gives access to list hammers
+    children:
+      hammers.command: true
+  hammers.give:
+    description: Gives access to give hammers
+    children:
+      hammers.command: true
+  hammers.reload:
+    description: Gives access to reload the config
+    children:
+      hammers.command: true
+  hammers.help:
+    description: Gives access to view the plugin help command
+    children:
+      hammers.command: true
+  hammers.info:
+    description: Gives access to view the plugin information
+    children:
+      hammers.command: true

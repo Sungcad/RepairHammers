@@ -1,0 +1,161 @@
+#for color codes use &
+
+#use sets the method to use the hammers
+#inventory - default drop the hammer on the item in the inventory
+#rightclick - right click while holding the hammer then right click while holding the item
+use: inventory
+
+#messages if rightclick method is used
+rightclick:
+  #message when a player click with a hammer
+  start:
+    - '&3Repair Hammers &7Right click the item to fix.'
+  #message if the hammer is removed from the players inventory
+  notfound:
+    - '&3Repair Hammers &7Repair canceled.'
+
+#format for money values
+format: '#,##0.00'
+
+#first line of /hammers list
+list: '&3Repair Hammers:'
+
+#message sent when you reload the config
+reload: '&3Repair Hammers &7The config has been reloaded.'
+
+#message sent when you use /hammers help
+#can have multiple lines
+help:
+- '&3Repair Hammers'
+- '&6/Hammers give <player> <hammer> (amount) &7give a player one or more hammers'
+- '&6/Hammers help &7show this list of commands'
+- '&6/Hammers info &7show information about the plugin'
+- '&6/Hammers list &7list all hammers and there amount'
+- '&6/Hammers reload &7reload the config'
+- '&6/Hammers shop &7Open the hammer shop'
+
+#settings for shop
+shop:
+  #should the /rhshop command be enabled
+  enabled: true
+  #message if the command is disabled
+  disabledmessage: "&cHammer shop is disabled."
+  #if set to true the plugin designs the shop layout based on the hammers the player can buy
+  #is set to false the values here and in hammers.yml will be used
+  default: true
+  #size is how many rows should be in the shop
+  #size is only used if default is set to false
+  size: 6
+  #name for the shop menu
+  name: "&6Hammer Shop"
+  #lore to be added to the end of each hammer
+  #set to [] to add nothing
+  addedlore:
+    - "cost to buy $<cost>"
+
+#section for error  messages
+error:
+  #errors if a player tries to do something they don't have permission for.
+  np:
+    #error messeage when a player doesn't have permission to veiw /hammers or /hammers help.
+    help: "&cYou don't have permission."
+    #error when a player tries to reload the config.
+    reload: "&cYou don't have permission."
+    #error when a player tries to give a hammer they can't.
+    give: "&cYou can't give that hammer."
+    #error when the player tries to give a hammer and doesn't have hammers.give or hammers.giveall.
+    givecmd: "&cYou can't give hammers."
+    #error when a player tries to use /hammers list with out permission.
+    list: "&cYou don't have permission."
+    #error when a player tries to use /hammers info with out permission.
+    info: "&cYou don't have permission."
+    #error when a player tries to buy a hammer they can't.
+    buy: "&cYou don't have permission."
+    #error when the player tries to give a hammer and doesn't have hammers.buy or hammers.buyall.
+    buycmd: "&cYou don't have permission."
+  #errors if the target is not found.
+  nf:
+    #error when the targeted player is not online.
+    player: "&cPlayer not found."
+    #error when the hammer name entered is not a hammer.
+    hammer: "&cHammer not found."
+  #errors if inputs are invalid.
+  args:
+    #error if input is not a number where a number should be
+    nan: "&cInvalid number."
+    #error for too many or too few arguments with give command
+    give: "&c/hammers give <player> <hammer> (number)"
+    #error for too many or too few arguments with buy command
+    buy: "&c/hammers buy <hammer> (number)"
+  #error if a player can't pay the cost of the hammer
+  #<cost> is replaced with the cost of the hammer the player tried to use
+  bal:
+    #error when they try to use a hammer
+    use: "&cYou need $<cost> to use this hammer."
+    #error when they try to buy a hammer
+    buy: "&cYou need $<cost> to buy this hammer."
+  #error if a non-player tries a player only command
+  sender: "&cYou must be a player to use this command."
+#here you can define lists of items to be fixed by the hammers
+#you can make as many lists as you want
+fixlist:
+  #this list has all the items that can be fixed
+  all:
+    - BOW
+    - CHAINMAIL_BOOTS
+    - CHAINMAIL_CHESTPLATE
+    - CHAINMAIL_HELMET
+    - CHAINMAIL_LEGGINGS
+    - DIAMOND_AXE
+    - DIAMOND_BOOTS
+    - DIAMOND_CHESTPLATE
+    - DIAMOND_HELMET
+    - DIAMOND_HOE
+    - DIAMOND_LEGGINGS
+    - DIAMOND_PICKAXE
+    - DIAMOND_SPADE
+    - DIAMOND_SWORD
+    - ELYTRA
+    - FISHING_ROD
+    - FLINT_AND_STEEL
+    - GOLD_AXE
+    - GOLD_BOOTS
+    - GOLD_CHESTPLATE
+    - GOLD_HELMET
+    - GOLD_HOE
+    - GOLD_LEGGINGS
+    - GOLD_PICKAXE
+    - GOLD_SPADE
+    - GOLD_SWORD
+    - IRON_AXE
+    - IRON_BOOTS
+    - IRON_CHESTPLATE
+    - IRON_HELMET
+    - IRON_HOE
+    - IRON_LEGGINGS
+    - IRON_PICKAXE
+    - IRON_SPADE
+    - IRON_SWORD
+    - LEATHER_BOOTS
+    - LEATHER_CHESTPLATE
+    - LEATHER_HELMET
+    - LEATHER_LEGGINGS
+    - SHEARS
+    - SHIELD
+    - STONE_AXE
+    - STONE_HOE
+    - STONE_PICKAXE
+    - STONE_SPADE
+    - STONE_SWORD
+    - WOOD_AXE
+    - WOOD_HOE
+    - WOOD_PICKAXE
+    - WOOD_SPADE
+    - WOOD_SWORD
+  #this list lets a hammer fix swords
+  swords:
+    - WOOD_SWORD
+    - STONE_SWORD
+    - IRON_SWORD
+    - GOLD_SWORD
+    - DIAMOND_SWORD
