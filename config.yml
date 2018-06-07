@@ -1,9 +1,23 @@
 #for color codes use &
 
-#use sets the method to use the hammers
-#inventory - default drop the hammer on the item in the inventory
-#rightclick - right click while holding the hammer then right click while holding the item
-use: inventory
+#ways you can use the hammers to fix items set at least one to true
+use:
+  #fix items by using a hammer on them from your inventory
+  inventory: true
+  #right click with the hammer in hand then with the item to fix
+  rightclick: true
+
+# what items should be fixaable enable one or more
+items:
+  # fix all default items and many that are added by plugins
+  minecraft: true
+  # fix items added by RPGItems
+  rpgitems: false
+  # fix items added from AdditionsAPI
+  additionsapi: false
+  # fix hammers from this plugin
+  hammers: false
+
 
 #messages if rightclick method is used
 rightclick:
@@ -99,7 +113,7 @@ error:
 #here you can define lists of items to be fixed by the hammers
 #you can make as many lists as you want
 fixlist:
-  #this list has all the items that can be fixed
+  #this list has all the default items that can be fixed
   all:
     - BOW
     - CHAINMAIL_BOOTS

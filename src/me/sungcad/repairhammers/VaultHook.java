@@ -1,12 +1,11 @@
 /*
  * Copyright (C) 2018  Sungcad
  */
-package me.sungcad.repairhammers.hooks;
+package me.sungcad.repairhammers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import me.sungcad.repairhammers.RepairHammerPlugin;
 import net.milkbowl.vault.economy.Economy;
 
 public class VaultHook {

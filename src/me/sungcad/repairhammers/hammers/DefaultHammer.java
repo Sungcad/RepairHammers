@@ -17,12 +17,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.sungcad.repairhammers.RepairHammerPlugin;
-import me.sungcad.repairhammers.hooks.AdditionApiHook;
-import me.sungcad.repairhammers.hooks.RPGItemsHook;
 
 public class DefaultHammer implements Hammer {
 	private final String name;
-	private boolean consume, enchanted, fixall, percent;
+	private boolean consume, destroy, enchanted, fixall, percent;
 	private String displayname, listbuycan, listbuycant;
 	private List<String> cantuse, fixlist, lore, use;
 	private short data;
@@ -33,10 +31,11 @@ public class DefaultHammer implements Hammer {
 	protected DefaultHammer(String name) {
 		this.name = name;
 		setData((byte) 0);
-		setConsume(true);
 		setEnchanted(true);
 		setFixall(false);
 		setPercent(true);
+		setConsume(true);
+		setDestroy(true);
 		setFixamount(50);
 		setUseCost(0);
 		setBuyCost(0);
@@ -55,11 +54,12 @@ public class DefaultHammer implements Hammer {
 	protected DefaultHammer(String name, ConfigurationSection config, RepairHammerPlugin plugin) {
 		this.name = name;
 		setData((byte) config.getInt("data", 0));
-		setConsume(config.getBoolean("consume", true));
-		setEnchanted(config.getBoolean("enchanted", true));
-		setFixall(config.getBoolean("fixall", false));
 		setPercent(config.getString("amount", "50%").endsWith("%"));
 		setFixamount(Integer.valueOf(config.getString("amount", "50%").replace("%", "")));
+		setConsume(config.getBoolean("consume", true));
+		setDestroy(config.getBoolean("destroy", true));
+		setEnchanted(config.getBoolean("enchanted", true));
+		setFixall(config.getBoolean("fixall", false));
 		setUseCost(config.getDouble("cost.use", 0.0));
 		setBuyCost(config.getDouble("cost.buy", 0.0));
 		setShopRow(config.getInt("shop.row", 0));
@@ -81,21 +81,8 @@ public class DefaultHammer implements Hammer {
 
 	@Override
 	public boolean canFix(ItemStack item) {
-		if (item != null && item.getType() != Material.AIR) {
-			if (getFixList().stream().filter(str -> str.equals(item.getType().toString())).findAny().isPresent()) {
-				if (RPGItemsHook.isRPGItem(item)) {
-					if (RPGItemsHook.needsRepair(item)) {
-						return true;
-					}
-				}
-				if (AdditionApiHook.isAdditionItem(item)) {
-					if (AdditionApiHook.needsFixed(item)) {
-						return true;
-					}
-				} else if (item.getDurability() > 0) {
-					return true;
-				}
-			}
+		if (item != null) {
+			return fixlist.stream().filter(str -> str.equals(item.getType().toString())).findAny().isPresent();
 		}
 		return false;
 	}
@@ -137,7 +124,7 @@ public class DefaultHammer implements Hammer {
 	}
 
 	@Override
-	public List<String> getCantUse() {
+	public List<String> getCantUseMessage() {
 		return cantuse;
 	}
 
@@ -152,16 +139,16 @@ public class DefaultHammer implements Hammer {
 	}
 
 	@Override
-	public List<String> getFixList() {
-		return fixlist;
-	}
-
-	@Override
-	public ItemStack getItem(int number) {
+	public ItemStack getHammerItem(int number) {
 		ItemStack item = new ItemStack(type, number, data);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(displayname);
-		meta.setLore(lore);
+		if (consume) {
+			List<String> newlore = new ArrayList<String>(lore);
+			newlore.add("§7" + fixamount + "/" + fixamount);
+			meta.setLore(newlore);
+		} else
+			meta.setLore(lore);
 		if (enchanted) {
 			meta.addEnchant(Enchantment.DURABILITY, 1, true);
 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -171,7 +158,7 @@ public class DefaultHammer implements Hammer {
 	}
 
 	@Override
-	public String getList(CommandSender sender) {
+	public String getListMessage(CommandSender sender) {
 		return (sender instanceof Player ? (canBuy(sender) ? listbuycan : listbuycant) : listbuycan);
 	}
 
@@ -191,7 +178,7 @@ public class DefaultHammer implements Hammer {
 	}
 
 	@Override
-	public List<String> getUse() {
+	public List<String> getUseMessage() {
 		return use;
 	}
 
@@ -225,7 +212,10 @@ public class DefaultHammer implements Hammer {
 	}
 
 	public void setConsume(boolean consume) {
-		this.consume = consume;
+		if (percent)
+			this.consume = false;
+		else
+			this.consume = consume;
 	}
 
 	public void setData(short data) {
@@ -288,5 +278,68 @@ public class DefaultHammer implements Hammer {
 
 	public void setUseCost(double usecost) {
 		this.usecost = usecost;
+	}
+
+	@Override
+	public boolean isDestroy() {
+		return destroy;
+	}
+
+	public void setDestroy(boolean destroy) {
+		this.destroy = destroy;
+	}
+
+	@Override
+	public ItemStack useDurability(ItemStack hammer, int amount) {
+		if (consume) {
+			ItemMeta meta = hammer.getItemMeta();
+			List<String> lore = meta.getLore();
+			String line = lore.get(lore.size() - 1);
+			if (line.matches("§7+\\d+\\/\\d+")) {
+				line = line.replaceAll("§7|\\/(\\d+)", "");
+				int left = Integer.parseInt(line);
+				left = Math.min(left - amount, fixamount);
+				if (left <= 0) {
+					if (destroy) {
+						if (hammer.getAmount() > 1) {
+							hammer.setAmount(hammer.getAmount() - 1);
+							left = fixamount;
+						} else {
+							hammer = null;
+							return hammer;
+						}
+					} else {
+						left = 0;
+					}
+				}
+				line = "§7" + left + "/" + fixamount;
+				lore.set(lore.size() - 1, line);
+				meta.setLore(lore);
+				hammer.setItemMeta(meta);
+			}
+		} else if (destroy) {
+			if (hammer.getAmount() > 1) {
+				hammer.setAmount(hammer.getAmount() - 1);
+			} else {
+				hammer = null;
+			}
+		}
+		return hammer;
+	}
+
+	@Override
+	public int getFixAmount(ItemStack hammer) {
+		ItemMeta meta = hammer.getItemMeta();
+		List<String> lore = meta.getLore();
+		String line = lore.get(lore.size() - 1);
+		if (line.matches("§7+\\d+\\/\\d+")) {
+			line = line.replaceAll("§7|\\/(\\d+)", "");
+			try {
+				return Integer.parseInt(line);
+			} catch (NumberFormatException e) {
+
+			}
+		}
+		return fixamount;
 	}
 }

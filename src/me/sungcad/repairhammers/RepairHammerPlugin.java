@@ -27,13 +27,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.sungcad.repairhammers.commands.HammerCommand;
 import me.sungcad.repairhammers.commands.HammerShopCommand;
 import me.sungcad.repairhammers.commands.HammerTabCompleter;
-import me.sungcad.repairhammers.hammers.HammerController;
-import me.sungcad.repairhammers.hooks.VaultHook;
+import me.sungcad.repairhammers.hammers.HammerManager;
+import me.sungcad.repairhammers.itemhooks.CustomItemManager;
 import me.sungcad.repairhammers.listeners.InventoryClickListener;
 import me.sungcad.repairhammers.listeners.RightClickListener;
+import me.sungcad.repairhammers.listeners.ShopListener;
 
 public class RepairHammerPlugin extends JavaPlugin {
-	HammerController hammers;
+	HammerManager hammers;
+	CustomItemManager items;
 	VaultHook economy;
 	NumberFormat money;
 
@@ -42,7 +44,8 @@ public class RepairHammerPlugin extends JavaPlugin {
 		saveDefaultConfig();
 		Files.HAMMER.load(this);
 		money = new DecimalFormat(getConfig().getString("format"));
-		hammers = new HammerController(this);
+		hammers = new HammerManager(this);
+		items = new CustomItemManager(this);
 		economy = new VaultHook(this);
 		setupCommands();
 		setupListeners();
@@ -53,8 +56,12 @@ public class RepairHammerPlugin extends JavaPlugin {
 
 	}
 
-	public HammerController getHammerController() {
+	public HammerManager getHammerManager() {
 		return hammers;
+	}
+
+	public CustomItemManager getCustomItemManager() {
+		return items;
 	}
 
 	public VaultHook getEconomy() {
@@ -76,8 +83,8 @@ public class RepairHammerPlugin extends JavaPlugin {
 	}
 
 	void setupListeners() {
-		boolean type = getConfig().getString("use", "inventory").equalsIgnoreCase("rightclick");
-		Bukkit.getPluginManager().registerEvents(new InventoryClickListener(this, !type), this);
-		Bukkit.getPluginManager().registerEvents(new RightClickListener(this, type), this);
+		Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
+		Bukkit.getPluginManager().registerEvents(new InventoryClickListener(this, getConfig().getBoolean("use.inventory", true)), this);
+		Bukkit.getPluginManager().registerEvents(new RightClickListener(this, getConfig().getBoolean("use.rightclick", false)), this);
 	}
 }

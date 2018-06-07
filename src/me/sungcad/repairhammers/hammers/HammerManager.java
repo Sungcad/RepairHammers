@@ -9,13 +9,13 @@ import java.util.Optional;
 
 import org.bukkit.inventory.ItemStack;
 
-import me.sungcad.repairhammers.RepairHammerPlugin;
 import me.sungcad.repairhammers.Files;
-public class HammerController {
+import me.sungcad.repairhammers.RepairHammerPlugin;
+public class HammerManager {
 	List<Hammer> hammers;
 	RepairHammerPlugin plugin;
 
-	public HammerController(RepairHammerPlugin plugin) {
+	public HammerManager(RepairHammerPlugin plugin) {
 		this.plugin = plugin;
 		hammers = new ArrayList<Hammer>();
 		Files.HAMMER.getConfig().getKeys(false).forEach(cnf -> hammers.add(new DefaultHammer(cnf, Files.HAMMER.getConfig().getConfigurationSection(cnf), plugin)));
@@ -39,7 +39,8 @@ public class HammerController {
 	}
 
 	public void reload() {
-		for (Hammer hammer : hammers) {
+		List<Hammer> newhammers = new ArrayList<Hammer>(hammers);
+		for (Hammer hammer : newhammers) {
 			if (hammer instanceof DefaultHammer) {
 				hammers.remove(hammer);
 			}

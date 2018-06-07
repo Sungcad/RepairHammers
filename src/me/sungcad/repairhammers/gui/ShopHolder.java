@@ -31,7 +31,7 @@ public class ShopHolder implements InventoryHolder {
 
 	public Inventory getInventory(Player player) {
 		List<Hammer> hammers = new ArrayList<>();
-		plugin.getHammerController().getHammers().stream().filter(hammer -> hammer.canBuy(player)).forEach(hammer -> hammers.add(hammer));
+		plugin.getHammerManager().getHammers().stream().filter(hammer -> hammer.canBuy(player)).forEach(hammer -> hammers.add(hammer));
 		Inventory inv;
 		if (plugin.getConfig().getBoolean("shop.default")) {
 			int size = ((hammers.size() / 9) * 9) + (hammers.size() % 9 > 0 ? 9 : 0);
@@ -54,7 +54,7 @@ public class ShopHolder implements InventoryHolder {
 	}
 
 	ItemStack getItem(Hammer hammer) {
-		ItemStack item = hammer.getItem(1);
+		ItemStack item = hammer.getHammerItem(1);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		for (String s : plugin.getConfig().getStringList("shop.addedlore")) {

@@ -16,7 +16,7 @@ import org.bukkit.util.StringUtil;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 
 public class HammerTabCompleter implements TabCompleter {
-	private final List<String> arg1 = Arrays.asList("give", "help", "info", "list", "reload", "shop");
+	private final List<String> arg1 = Arrays.asList("buy", "give", "help", "info", "list", "reload", "shop");
 	private RepairHammerPlugin plugin;
 
 	public HammerTabCompleter(RepairHammerPlugin plugin) {
@@ -37,7 +37,7 @@ public class HammerTabCompleter implements TabCompleter {
 				StringUtil.copyPartialMatches(args[1], players, list);
 			} else {
 				List<String> hammers = new ArrayList<String>();
-				plugin.getHammerController().getHammers().forEach(hammer -> {
+				plugin.getHammerManager().getHammers().forEach(hammer -> {
 					if (hammer.canGive(sender))
 						hammers.add(hammer.getName());
 				});
@@ -49,7 +49,7 @@ public class HammerTabCompleter implements TabCompleter {
 			}
 		} else if (args.length >= 1 && args[0].equalsIgnoreCase("buy")) {
 			List<String> hammers = new ArrayList<String>();
-			plugin.getHammerController().getHammers().forEach(hammer -> {
+			plugin.getHammerManager().getHammers().forEach(hammer -> {
 				if (hammer.canBuy(sender))
 					hammers.add(hammer.getName());
 			});

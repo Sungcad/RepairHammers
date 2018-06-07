@@ -2,7 +2,7 @@ name: RepairHammers
 author: Sungcad
 website: https://www.spigotmc.org/resources/repair-hammers.44699/
 main: me.sungcad.repairhammers.RepairHammerPlugin
-version: 1.0.9
+version: 1.1.1
 softdepend:
   - Vault
   - RPGItems

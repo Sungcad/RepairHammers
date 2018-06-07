@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018  Sungcad
+ */
 package me.sungcad.repairhammers.listeners;
 
 import java.util.HashMap;
@@ -16,8 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.sungcad.repairhammers.RepairHammerPlugin;
 import me.sungcad.repairhammers.hammers.Hammer;
-import me.sungcad.repairhammers.hooks.AdditionApiHook;
-import me.sungcad.repairhammers.hooks.RPGItemsHook;
+import me.sungcad.repairhammers.itemhooks.CustomItemHook;
 
 public class RightClickListener implements Listener {
 	RepairHammerPlugin plugin;
@@ -40,66 +42,63 @@ public class RightClickListener implements Listener {
 		Player player = event.getPlayer();
 		if (players.containsKey(player)) {
 			Hammer hammer = players.get(player);
+			players.remove(player);
+			event.setCancelled(true);
 			int slot = getSlot(player, hammer);
 			if (slot == -1) {
-				players.remove(player);
 				plugin.getConfig().getStringList("rightclick.notfound").forEach(line -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', line)));
 				return;
 			}
 			ItemStack target = player.getItemInHand();
-			if (hammer.canFix(target)) {
-				if (hammer.canUse(player)) {
-					event.setCancelled(true);
-					if (hammer.getUseCost() > 0) {
-						if (plugin.getEconomy().isLoaded()) {
-							if (plugin.getEconomy().getEconomy().has(player, hammer.getUseCost())) {
-								plugin.getEconomy().getEconomy().withdrawPlayer(player, hammer.getUseCost());
-							} else {
-								player.sendMessage(
-										ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.use").replace("<cost>", plugin.getFormat().format(hammer.getUseCost()))));
-								players.remove(player);
-								return;
-							}
-						} else {
-							plugin.getLogger().warning("Vault not found");
-							plugin.getLogger().warning("Hammers with a cost are free");
-						}
-					}
-					if (hammer.isConsume()) {
-						int amount = player.getInventory().getItem(slot).getAmount();
-						if (amount > 1)
-							player.getInventory().getItem(slot).setAmount(amount - 1);
-						else {
-							player.getInventory().clear(slot);
-						}
-					}
-					if (hammer.isFixall()) {
-						player.getInventory().forEach(item -> {
-							if (hammer.canFix(item))
-								fix(item, hammer);
-						});
-						for (ItemStack item : player.getInventory().getArmorContents())
-							if (hammer.canFix(item))
-								fix(item, hammer);
+			if (!hammer.canFix(target) || !hammer.canUse(player)) {
+				hammer.getCantUseMessage().forEach(s -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', s)));
+				return;
+			}
+			CustomItemHook hook = plugin.getCustomItemManager().getHook(target);
+			if (hook == null) {
+				return;
+			}
+			int damage;
+			if (hammer.isPercent())
+				damage = (int) Math.min(hook.getMaxDurability(target) * hammer.getFixAmount() * .01, hook.getDamage(target));
+			else
+				damage = Math.min(hook.getDamage(target), hammer.getFixAmount(player.getInventory().getItem(slot)));
+			if (damage <= 0)
+				return;
+			if (hammer.getUseCost() > 0) {
+				if (plugin.getEconomy().isLoaded()) {
+					if (plugin.getEconomy().getEconomy().has(player, hammer.getUseCost())) {
+						plugin.getEconomy().getEconomy().withdrawPlayer(player, hammer.getUseCost());
 					} else {
-						fix(target, hammer);
+						player.sendMessage(
+								ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.use").replace("<cost>", plugin.getFormat().format(hammer.getUseCost()))));
+						return;
 					}
-					hammer.getUse().forEach(s -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', s)));
 				} else {
-					hammer.getCantUse().forEach(s -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', s)));
+					plugin.getLogger().warning("Vault not found");
+					plugin.getLogger().warning("Hammers with a cost are free");
+				}
+			}
+			if (hammer.useDurability(player.getInventory().getItem(slot), damage) == null)
+				player.getInventory().setItem(slot, null);
+			if (hammer.isFixall()) {
+				for (ItemStack item : player.getInventory()) {
+					if (hammer.canFix(item)) {
+						plugin.getCustomItemManager().fixItem(item, damage);
+					}
 				}
 			} else {
-				hammer.getCantUse().forEach(s -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', s)));
+				hook.fixItem(target, damage);
 			}
-			players.remove(player);
+			hammer.getUseMessage().forEach(line -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', line)));
 		} else {
-			Optional<Hammer> ohammer = plugin.getHammerController().getHammer(player.getItemInHand());
+			Optional<Hammer> ohammer = plugin.getHammerManager().getHammer(player.getItemInHand());
 			if (ohammer.isPresent()) {
+				event.setCancelled(true);
 				players.put(player, ohammer.get());
 				plugin.getConfig().getStringList("rightclick.start").forEach(line -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', line)));
 			}
 		}
-
 	}
 
 	@EventHandler
@@ -115,24 +114,6 @@ public class RightClickListener implements Listener {
 				else
 					item.setAmount(item.getAmount() - 1);
 			}
-		}
-	}
-
-	void fix(ItemStack item, Hammer hammer) {
-		if (RPGItemsHook.isRPGItem(item)) {
-			RPGItemsHook.repairItem(item, hammer);
-		} else if (AdditionApiHook.isAdditionItem(item)) {
-			AdditionApiHook.fixItem(item, hammer);
-		} else {
-			short targetdamage = item.getDurability();
-			short targetmax = item.getType().getMaxDurability();
-			if (hammer.isPercent())
-				targetdamage -= (targetmax * hammer.getFixAmount() * .01);
-			else
-				targetdamage -= hammer.getFixAmount();
-			if (targetdamage < 0)
-				targetdamage = 0;
-			item.setDurability(targetdamage);
 		}
 	}
 

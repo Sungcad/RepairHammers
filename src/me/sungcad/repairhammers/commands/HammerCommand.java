@@ -15,6 +15,10 @@ import org.bukkit.inventory.ItemStack;
 import me.sungcad.repairhammers.Files;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 import me.sungcad.repairhammers.hammers.Hammer;
+import me.sungcad.repairhammers.itemhooks.AdditionsAPIHook;
+import me.sungcad.repairhammers.itemhooks.DefaultItemHook;
+import me.sungcad.repairhammers.itemhooks.HammerItemHook;
+import me.sungcad.repairhammers.itemhooks.RPGItemsHook;
 import me.sungcad.repairhammers.listeners.InventoryClickListener;
 import me.sungcad.repairhammers.listeners.RightClickListener;
 
@@ -32,11 +36,15 @@ public class HammerCommand implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("list")) {
 				if (sender.hasPermission("hammers.listall")) {
 					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("list")));
-					plugin.getHammerController().getHammers().forEach(hammer -> sender.sendMessage(hammer.getList(sender)));
+					plugin.getHammerManager().getHammers().forEach(hammer -> sender.sendMessage(hammer.getListMessage(sender)));
 
 				} else if (sender.hasPermission("hammers.list")) {
 					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("list")));
-					plugin.getHammerController().getHammers().stream().filter(hammer -> hammer.canBuy(sender)).forEach(hammer -> sender.sendMessage(hammer.getList(sender)));
+					plugin.getHammerManager().getHammers().stream().forEach(hammer -> {
+						if (hammer.canBuy(sender)) {
+							sender.sendMessage(hammer.getListMessage(sender));
+						}
+					});
 				} else {
 					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("error.np.list")));
 				}
@@ -45,11 +53,11 @@ public class HammerCommand implements CommandExecutor {
 				if (sender.hasPermission("hammers.buy")) {
 					if ((sender instanceof Player)) {
 						if (args.length == 2 || args.length == 3) {
-							Optional<Hammer> ohammer = plugin.getHammerController().getHammer(args[1]);
+							Optional<Hammer> ohammer = plugin.getHammerManager().getHammer(args[1]);
 							if (ohammer.isPresent()) {
 								Hammer hammer = ohammer.get();
 								Player player = (Player) sender;
-								if (hammer.canBuy(player)) {
+								if (hammer.canBuy(sender)) {
 									int amount = 1;
 									try {
 										amount = args.length == 3 ? Math.max(Integer.parseInt(args[2]), 1) : 1;
@@ -57,16 +65,17 @@ public class HammerCommand implements CommandExecutor {
 										sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("error.nan")));
 										return true;
 									}
-									if (plugin.getEconomy().isLoaded() && hammer.getBuyCost() > 0) {
-										if (plugin.getEconomy().getEconomy().has(player, amount * hammer.getBuyCost())) {
-											plugin.getEconomy().getEconomy().withdrawPlayer(player, amount * hammer.getBuyCost());
+									double cost = hammer.getBuyCost() * amount;
+									if (plugin.getEconomy().isLoaded() && cost > 0) {
+										if (plugin.getEconomy().getEconomy().has(player, cost)) {
+											plugin.getEconomy().getEconomy().withdrawPlayer(player, cost);
 										} else {
-											player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-													plugin.getConfig().getString("error.bal.buy").replace("<cost>", plugin.getFormat().format(amount * hammer.getBuyCost()))));
+											player.sendMessage(
+													ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.buy").replace("<cost>", plugin.getFormat().format(cost))));
 											return true;
 										}
 									}
-									ItemStack item = hammer.getItem(amount);
+									ItemStack item = hammer.getHammerItem(amount);
 									if (player.getInventory().firstEmpty() != -1)
 										player.getInventory().addItem(item);
 									else
@@ -87,7 +96,7 @@ public class HammerCommand implements CommandExecutor {
 					if (args.length == 3 || args.length == 4) {
 						Player player = Bukkit.getPlayer(args[1]);
 						if (player != null) {
-							Optional<Hammer> ohammer = plugin.getHammerController().getHammer(args[2]);
+							Optional<Hammer> ohammer = plugin.getHammerManager().getHammer(args[2]);
 							if (ohammer.isPresent()) {
 								Hammer hammer = ohammer.get();
 								if (hammer.canGive(sender)) {
@@ -98,7 +107,7 @@ public class HammerCommand implements CommandExecutor {
 										sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("error.nan")));
 										return true;
 									}
-									ItemStack item = hammer.getItem(amount);
+									ItemStack item = hammer.getHammerItem(amount);
 									if (player.getInventory().firstEmpty() != -1)
 										player.getInventory().addItem(item);
 									else
@@ -118,10 +127,13 @@ public class HammerCommand implements CommandExecutor {
 				if (sender.hasPermission("hammers.reload")) {
 					plugin.reloadConfig();
 					Files.HAMMER.reload(plugin);
-					plugin.getHammerController().reload();
-					boolean listener = plugin.getConfig().getString("use", "rightclick").equalsIgnoreCase("rightclick");
-					InventoryClickListener.setEnabeld(!listener);
-					RightClickListener.setEnabled(listener);
+					plugin.getHammerManager().reload();
+					InventoryClickListener.setEnabeld(plugin.getConfig().getBoolean("use.inventory", true));
+					RightClickListener.setEnabled(plugin.getConfig().getBoolean("use.rightclick", true));
+					AdditionsAPIHook.setEnabled(plugin.getConfig().getBoolean("items.additionsapi", false));
+					DefaultItemHook.setEnabled(plugin.getConfig().getBoolean("items.minecraft", true));
+					HammerItemHook.setEnabled(plugin.getConfig().getBoolean("items.hammers", false));
+					RPGItemsHook.setEnabled(plugin.getConfig().getBoolean("items.rpgitems", false));
 					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("reload")));
 					return true;
 				} else {
