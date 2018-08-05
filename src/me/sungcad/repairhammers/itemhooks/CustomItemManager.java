@@ -29,7 +29,7 @@ public class CustomItemManager {
 
 	public ItemStack fixItem(ItemStack item, int amount) {
 		for (CustomItemHook hook : hooks) {
-			if (hook.isEnabled() && hook.isCustomItem(item)) {
+			if (hook.isEnabled() && hook.isCustomItem(item) && hook.isDamaged(item)) {
 				return hook.fixItem(item, amount);
 			}
 		}
@@ -42,10 +42,14 @@ public class CustomItemManager {
 
 	public CustomItemHook getHook(ItemStack item) {
 		for (CustomItemHook hook : hooks) {
-			if (hook.isEnabled() && hook.isCustomItem(item)) {
+			if (hook.isEnabled() && hook.isCustomItem(item) && hook.isDamaged(item)) {
 				return hook;
 			}
 		}
 		return null;
+	}
+
+	public boolean removeHook(CustomItemHook hook) {
+		return hooks.remove(hook);
 	}
 }

@@ -29,7 +29,9 @@ import me.sungcad.repairhammers.commands.HammerShopCommand;
 import me.sungcad.repairhammers.commands.HammerTabCompleter;
 import me.sungcad.repairhammers.hammers.HammerManager;
 import me.sungcad.repairhammers.itemhooks.CustomItemManager;
+import me.sungcad.repairhammers.listeners.CraftingListener;
 import me.sungcad.repairhammers.listeners.InventoryClickListener;
+import me.sungcad.repairhammers.listeners.PlaceListener;
 import me.sungcad.repairhammers.listeners.RightClickListener;
 import me.sungcad.repairhammers.listeners.ShopListener;
 
@@ -84,7 +86,9 @@ public class RepairHammerPlugin extends JavaPlugin {
 
 	void setupListeners() {
 		Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
+		Bukkit.getPluginManager().registerEvents(new CraftingListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new InventoryClickListener(this, getConfig().getBoolean("use.inventory", true)), this);
 		Bukkit.getPluginManager().registerEvents(new RightClickListener(this, getConfig().getBoolean("use.rightclick", false)), this);
+		Bukkit.getPluginManager().registerEvents(new PlaceListener(this), this);
 	}
 }

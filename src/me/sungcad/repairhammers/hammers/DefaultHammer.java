@@ -16,62 +16,64 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.sungcad.repairhammers.Files;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 
-public class DefaultHammer implements Hammer {
+public class DefaultHammer implements EditableHammer {
 	private final String name;
 	private boolean consume, destroy, enchanted, fixall, percent;
-	private String displayname, listbuycan, listbuycant;
+	private String displayname, listcan, listcant;
 	private List<String> cantuse, fixlist, lore, use;
 	private short data;
 	private int fixamount, shoprow, shopcolumn;
 	private double buycost, usecost;
 	private Material type;
+	private RepairHammerPlugin plugin;
 
-	protected DefaultHammer(String name) {
+	protected DefaultHammer(String name, RepairHammerPlugin plugin) {
 		this.name = name;
+		this.plugin = plugin;
 		setData((byte) 0);
 		setEnchanted(true);
-		setFixall(false);
+		setFixAll(false);
 		setPercent(true);
 		setConsume(true);
 		setDestroy(true);
-		setFixamount(50);
+		setFixAmount(50);
 		setUseCost(0);
 		setBuyCost(0);
-		setShopRow(0);
-		setShopColumn(0);
+		setShopLocation(-1, -1);
 		setFixlist(new ArrayList<String>());
-		setType(Material.IRON_INGOT);
-		setDisplayname("Hammer");
-		setListBuyCan("&2Hammer &7fix one item by 50%");
-		setListBuyCant("&4Hammer &7fix one item by 50%");
-		setCantuse(new ArrayList<String>());
+		setMaterial(Material.IRON_INGOT);
+		setItemName("Hammer");
+		setBuyListCan("&2Hammer &7fix one item by 50%");
+		setBuyListCant("&4Hammer &7fix one item by 50%");
+		setCantUseMessage(new ArrayList<String>());
 		setLore(new ArrayList<String>());
-		setUse(new ArrayList<String>());
+		setUseMessage(new ArrayList<String>());
 	}
 
 	protected DefaultHammer(String name, ConfigurationSection config, RepairHammerPlugin plugin) {
 		this.name = name;
+		this.plugin = plugin;
 		setData((byte) config.getInt("data", 0));
 		setPercent(config.getString("amount", "50%").endsWith("%"));
-		setFixamount(Integer.valueOf(config.getString("amount", "50%").replace("%", "")));
+		setFixAmount(Integer.valueOf(config.getString("amount", "50%").replace("%", "")));
 		setConsume(config.getBoolean("consume", true));
 		setDestroy(config.getBoolean("destroy", true));
 		setEnchanted(config.getBoolean("enchanted", true));
-		setFixall(config.getBoolean("fixall", false));
+		setFixAll(config.getBoolean("fixall", false));
 		setUseCost(config.getDouble("cost.use", 0.0));
 		setBuyCost(config.getDouble("cost.buy", 0.0));
-		setShopRow(config.getInt("shop.row", 0));
-		setShopColumn(config.getInt("shop.column", 0));
+		setShopLocation(config.getInt("shop.row", 0), config.getInt("shop.column", 0));
 		setFixlist(plugin.getConfig().getStringList("fixlist." + config.getString("fixlist", "all")));
-		setType(Material.valueOf(config.getString("type", "IRON_INGOT")));
-		setDisplayname(config.getString("name", "Hammer"));
-		setListBuyCan(config.getString("listgive.can", "&2" + name + " &7fix one item by " + fixamount + (percent ? "%" : "")));
-		setListBuyCant(config.getString("listgive.cant", "&4" + name + " &7fix one item by " + fixamount + (percent ? "%" : "")));
-		setCantuse(config.getStringList("cantuse"));
+		setMaterial(Material.valueOf(config.getString("type", "IRON_INGOT")));
+		setItemName(config.getString("name", "Hammer"));
+		setBuyListCan(config.getString("listgive.can", "&2" + name + " &7fix one item by " + fixamount + (percent ? "%" : "")));
+		setBuyListCant(config.getString("listgive.cant", "&4" + name + " &7fix one item by " + fixamount + (percent ? "%" : "")));
+		setCantUseMessage(config.getStringList("cantuse"));
 		setLore(config.getStringList("lore"));
-		setUse(config.getStringList("use"));
+		setUseMessage(config.getStringList("use"));
 	}
 
 	@Override
@@ -159,7 +161,7 @@ public class DefaultHammer implements Hammer {
 
 	@Override
 	public String getListMessage(CommandSender sender) {
-		return (sender instanceof Player ? (canBuy(sender) ? listbuycan : listbuycant) : listbuycan);
+		return (sender instanceof Player ? (canBuy(sender) ? listcan : listcant) : listcan);
 	}
 
 	@Override
@@ -202,15 +204,18 @@ public class DefaultHammer implements Hammer {
 		return percent;
 	}
 
+	@Override
 	public void setBuyCost(double buycost) {
 		this.buycost = buycost;
 	}
 
-	public void setCantuse(List<String> cantuse) {
+	@Override
+	public void setCantUseMessage(List<String> cantuse) {
 		this.cantuse = new ArrayList<String>(cantuse.size());
 		cantuse.forEach(line -> this.cantuse.add(ChatColor.translateAlternateColorCodes('&', line)));
 	}
 
+	@Override
 	public void setConsume(boolean consume) {
 		if (percent)
 			this.consume = false;
@@ -218,64 +223,80 @@ public class DefaultHammer implements Hammer {
 			this.consume = consume;
 	}
 
+	@Override
 	public void setData(short data) {
 		this.data = data;
 	}
 
-	public void setDisplayname(String displayname) {
+	@Override
+	public void setItemName(String displayname) {
 		this.displayname = ChatColor.translateAlternateColorCodes('&', displayname);
 	}
 
+	@Override
 	public void setEnchanted(boolean enchanted) {
 		this.enchanted = enchanted;
 	}
 
-	public void setFixall(boolean fixall) {
+	@Override
+	public void setFixAll(boolean fixall) {
 		this.fixall = fixall;
 	}
 
-	public void setFixamount(int fixamount) {
+	@Override
+	public void setFixAmount(int fixamount) {
 		this.fixamount = fixamount;
+	}
+
+	@Override
+	public void setFixAmount(String fixamount) {
+		percent = fixamount.endsWith("%");
+		setFixAmount(Integer.parseInt(fixamount.replace("%", "")));
 	}
 
 	public void setFixlist(List<String> fixlist) {
 		this.fixlist = fixlist;
 	}
 
-	public void setListBuyCan(String listcan) {
-		this.listbuycan = ChatColor.translateAlternateColorCodes('&', listcan);
+	@Override
+	public void setBuyListCan(String listcan) {
+		this.listcan = ChatColor.translateAlternateColorCodes('&', listcan);
 	}
 
-	public void setListBuyCant(String listcant) {
-		this.listbuycant = ChatColor.translateAlternateColorCodes('&', listcant);
+	@Override
+	public void setBuyListCant(String listcant) {
+		this.listcant = ChatColor.translateAlternateColorCodes('&', listcant);
 	}
 
+	@Override
 	public void setLore(List<String> lore) {
 		this.lore = new ArrayList<String>(lore.size());
 		lore.forEach(line -> this.lore.add(ChatColor.translateAlternateColorCodes('&', line)));
 	}
 
+	@Override
 	public void setPercent(boolean percent) {
 		this.percent = percent;
 	}
 
-	public void setShopColumn(int shopcolumn) {
-		this.shopcolumn = shopcolumn;
+	@Override
+	public void setShopLocation(int row, int column) {
+		shopcolumn = column;
+		shoprow = row;
 	}
 
-	public void setShopRow(int shoprow) {
-		this.shoprow = shoprow;
-	}
-
-	public void setType(Material type) {
+	@Override
+	public void setMaterial(Material type) {
 		this.type = type;
 	}
 
-	public void setUse(List<String> use) {
+	@Override
+	public void setUseMessage(List<String> use) {
 		this.use = new ArrayList<String>(use.size());
 		use.forEach(line -> this.use.add(ChatColor.translateAlternateColorCodes('&', line)));
 	}
 
+	@Override
 	public void setUseCost(double usecost) {
 		this.usecost = usecost;
 	}
@@ -285,6 +306,7 @@ public class DefaultHammer implements Hammer {
 		return destroy;
 	}
 
+	@Override
 	public void setDestroy(boolean destroy) {
 		this.destroy = destroy;
 	}
@@ -341,5 +363,51 @@ public class DefaultHammer implements Hammer {
 			}
 		}
 		return fixamount;
+	}
+
+	@Override
+	public void save() {
+		ConfigurationSection config = Files.HAMMER.getConfig().getConfigurationSection(name);
+		config.set("data", data);
+		config.set("type", type);
+		config.set("consume", consume);
+		config.set("destroy", destroy);
+		config.set("enchanted", enchanted);
+		config.set("cost.use", usecost);
+		config.set("cost.buy", buycost);
+		config.set("name", name);
+		config.set("shop.row", shoprow);
+		config.set("shop.column", shopcolumn);
+		config.set("fixall", fixall);
+		config.set("amount", fixamount + (percent ? "%" : ""));
+		config.set("listgive.can", listcan);
+		config.set("listgive,cant", listcant);
+		config.set("cantuse", cantuse);
+		config.set("lore", lore);
+		config.set("use", use);
+		Files.HAMMER.save(plugin);
+	}
+
+	@Override
+	public void reload() {
+		ConfigurationSection config = Files.HAMMER.getConfig().getConfigurationSection(name);
+		setData((byte) config.getInt("data", 0));
+		setPercent(config.getString("amount", "50%").endsWith("%"));
+		setFixAmount(Integer.valueOf(config.getString("amount", "50%").replace("%", "")));
+		setConsume(config.getBoolean("consume", true));
+		setDestroy(config.getBoolean("destroy", true));
+		setEnchanted(config.getBoolean("enchanted", true));
+		setFixAll(config.getBoolean("fixall", false));
+		setUseCost(config.getDouble("cost.use", 0.0));
+		setBuyCost(config.getDouble("cost.buy", 0.0));
+		setShopLocation(config.getInt("shop.row", 0), config.getInt("shop.column", 0));
+		setFixlist(plugin.getConfig().getStringList("fixlist." + config.getString("fixlist", "all")));
+		setMaterial(Material.valueOf(config.getString("type", "IRON_INGOT")));
+		setItemName(config.getString("name", "Hammer"));
+		setBuyListCan(config.getString("listgive.can", "&2" + name + " &7fix one item by " + fixamount + (percent ? "%" : "")));
+		setBuyListCant(config.getString("listgive.cant", "&4" + name + " &7fix one item by " + fixamount + (percent ? "%" : "")));
+		setCantUseMessage(config.getStringList("cantuse"));
+		setLore(config.getStringList("lore"));
+		setUseMessage(config.getStringList("use"));
 	}
 }

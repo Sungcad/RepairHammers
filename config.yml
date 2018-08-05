@@ -1,44 +1,57 @@
-#for color codes use &
 
-#ways you can use the hammers to fix items set at least one to true
+# for color codes use &
+
+# ways you can use the hammers to fix items set at least one to true
 use:
-  #fix items by using a hammer on them from your inventory
+  # fix items by using a hammer on them from your inventory
   inventory: true
-  #right click with the hammer in hand then with the item to fix
+  # right click with the hammer in hand then with the item to fix
   rightclick: true
 
-# what items should be fixaable enable one or more
+# Set the items that can be fixable. enable one or more by setting them to true
+# Many items added by plugins are fixed the same way as default items in minecraft,
+# these items should be able to be fixed by the section mincraft: true
+# Some plugins that handle them some other way such as RPGItems, AdditionsAPI, and RepairHammers.
+# if there is a plugin that adds items that can not be fixed in one of these groups
+# send me a message and if it is possable I can add it to the plugin.
 items:
-  # fix all default items and many that are added by plugins
+  # fix all default items and many that are added by other plugins
   minecraft: true
   # fix items added by RPGItems
   rpgitems: false
   # fix items added from AdditionsAPI
   additionsapi: false
   # fix hammers from this plugin
+  # warning this can cause bugs (i.e. a hammer fixing itself then taking damage equal to the amount )
   hammers: false
 
-
-#messages if rightclick method is used
+# messages if rightclick method is used
 rightclick:
-  #message when a player click with a hammer
+  # message when a player click with a hammer
   start:
     - '&3Repair Hammers &7Right click the item to fix.'
-  #message if the hammer is removed from the players inventory
+  # message if the hammer is removed from the players inventory
   notfound:
     - '&3Repair Hammers &7Repair canceled.'
+  # time player has to fix there items before the repair is canceled
+  timeout:
+    # time a player has to switch to and click there item in seconds
+    time: 10
+    # message sent to a player when the repair is canceled due to timeout
+    message:
+      - '&3Repair Hammers &7Repair canceled.'
 
-#format for money values
-format: '#,##0.00'
+# format for money values
+format: '# ,# # 0.00'
 
-#first line of /hammers list
+# first line of /hammers list
 list: '&3Repair Hammers:'
 
-#message sent when you reload the config
+# message sent when you reload the config
 reload: '&3Repair Hammers &7The config has been reloaded.'
 
-#message sent when you use /hammers help
-#can have multiple lines
+# message sent when you use /hammers help
+# can have multiple lines
 help:
 - '&3Repair Hammers'
 - '&6/Hammers give <player> <hammer> (amount) &7give a player one or more hammers'
@@ -48,72 +61,72 @@ help:
 - '&6/Hammers reload &7reload the config'
 - '&6/Hammers shop &7Open the hammer shop'
 
-#settings for shop
+# settings for shop
 shop:
-  #should the /rhshop command be enabled
+  # should the /rhshop command be enabled
   enabled: true
-  #message if the command is disabled
+  # message if the command is disabled
   disabledmessage: "&cHammer shop is disabled."
-  #if set to true the plugin designs the shop layout based on the hammers the player can buy
-  #is set to false the values here and in hammers.yml will be used
+  # if set to true the plugin designs the shop layout based on the hammers the player can buy
+  # is set to false the values here and in hammers.yml will be used
   default: true
-  #size is how many rows should be in the shop
-  #size is only used if default is set to false
+  # size is how many rows should be in the shop
+  # size is only used if default is set to false
   size: 6
-  #name for the shop menu
+  # name for the shop menu
   name: "&6Hammer Shop"
-  #lore to be added to the end of each hammer
-  #set to [] to add nothing
+  # lore to be added to the end of each hammer
+  # set to [] to add nothing
   addedlore:
     - "cost to buy $<cost>"
 
-#section for error  messages
+# section for error  messages
 error:
-  #errors if a player tries to do something they don't have permission for.
+  # errors if a player tries to do something they don't have permission for.
   np:
-    #error messeage when a player doesn't have permission to veiw /hammers or /hammers help.
+    # error messeage when a player doesn't have permission to veiw /hammers or /hammers help.
     help: "&cYou don't have permission."
-    #error when a player tries to reload the config.
+    # error when a player tries to reload the config.
     reload: "&cYou don't have permission."
-    #error when a player tries to give a hammer they can't.
+    # error when a player tries to give a hammer they can't.
     give: "&cYou can't give that hammer."
-    #error when the player tries to give a hammer and doesn't have hammers.give or hammers.giveall.
+    # error when the player tries to give a hammer and doesn't have hammers.give or hammers.giveall.
     givecmd: "&cYou can't give hammers."
-    #error when a player tries to use /hammers list with out permission.
+    # error when a player tries to use /hammers list with out permission.
     list: "&cYou don't have permission."
-    #error when a player tries to use /hammers info with out permission.
+    # error when a player tries to use /hammers info with out permission.
     info: "&cYou don't have permission."
-    #error when a player tries to buy a hammer they can't.
+    # error when a player tries to buy a hammer they can't.
     buy: "&cYou don't have permission."
-    #error when the player tries to give a hammer and doesn't have hammers.buy or hammers.buyall.
+    # error when the player tries to give a hammer and doesn't have hammers.buy or hammers.buyall.
     buycmd: "&cYou don't have permission."
-  #errors if the target is not found.
+  # errors if the target is not found.
   nf:
-    #error when the targeted player is not online.
+    # error when the targeted player is not online.
     player: "&cPlayer not found."
-    #error when the hammer name entered is not a hammer.
+    # error when the hammer name entered is not a hammer.
     hammer: "&cHammer not found."
-  #errors if inputs are invalid.
+  # errors if inputs are invalid.
   args:
-    #error if input is not a number where a number should be
+    # error if input is not a number where a number should be
     nan: "&cInvalid number."
-    #error for too many or too few arguments with give command
+    # error for too many or too few arguments with give command
     give: "&c/hammers give <player> <hammer> (number)"
-    #error for too many or too few arguments with buy command
+    # error for too many or too few arguments with buy command
     buy: "&c/hammers buy <hammer> (number)"
-  #error if a player can't pay the cost of the hammer
-  #<cost> is replaced with the cost of the hammer the player tried to use
+  # error if a player can't pay the cost of the hammer
+  # <cost> is replaced with the cost of the hammer the player tried to use
   bal:
-    #error when they try to use a hammer
+    # error when they try to use a hammer
     use: "&cYou need $<cost> to use this hammer."
-    #error when they try to buy a hammer
+    # error when they try to buy a hammer
     buy: "&cYou need $<cost> to buy this hammer."
-  #error if a non-player tries a player only command
+  # error if a non-player tries a player only command
   sender: "&cYou must be a player to use this command."
-#here you can define lists of items to be fixed by the hammers
-#you can make as many lists as you want
+# here you can define lists of items to be fixed by the hammers
+# you can make as many lists as you want
 fixlist:
-  #this list has all the default items that can be fixed
+  # this list has all the default items that can be fixed
   all:
     - BOW
     - CHAINMAIL_BOOTS
@@ -166,7 +179,7 @@ fixlist:
     - WOOD_PICKAXE
     - WOOD_SPADE
     - WOOD_SWORD
-  #this list lets a hammer fix swords
+  # this list lets a hammer fix swords
   swords:
     - WOOD_SWORD
     - STONE_SWORD
