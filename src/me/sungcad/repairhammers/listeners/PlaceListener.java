@@ -7,17 +7,17 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 
 public class PlaceListener implements Listener {
-	RepairHammerPlugin plugin;
+    RepairHammerPlugin plugin;
 
-	public PlaceListener(RepairHammerPlugin plugin) {
-		this.plugin = plugin;
-	}
+    public PlaceListener(RepairHammerPlugin plugin) {
+        this.plugin = plugin;
+    }
 
-	@EventHandler
-	public void onClick(BlockPlaceEvent event) {
-		if (plugin.getHammerManager().getHammer(event.getItemInHand()).isPresent()) {
-			event.setCancelled(true);
-		}
-	}
+    @EventHandler
+    public void onClick(BlockPlaceEvent event) {
+        if (plugin.getHammerManager().getHammer(event.getItemInHand()).isPresent()) {
+            event.setCancelled(true);
+        }
+    }
 
 }

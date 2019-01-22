@@ -8,20 +8,20 @@ import org.bukkit.inventory.ItemStack;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 
 public class CraftingListener implements Listener {
-	RepairHammerPlugin plugin;
+    RepairHammerPlugin plugin;
 
-	public CraftingListener(RepairHammerPlugin plugin) {
-		this.plugin = plugin;
-	}
+    public CraftingListener(RepairHammerPlugin plugin) {
+        this.plugin = plugin;
+    }
 
-	@EventHandler
-	public void craftItem(CraftItemEvent e) {
-		ItemStack[] item = e.getInventory().getMatrix();
-		for (int i = 0; i < 9; i++) {
-			if (plugin.getHammerManager().getHammer(item[i]).isPresent()) {
-				e.setCancelled(true);
-				return;
-			}
-		}
-	}
+    @EventHandler
+    public void craftItem(CraftItemEvent e) {
+        ItemStack[] item = e.getInventory().getMatrix();
+        for (int i = 0; i < 9; i++) {
+            if (plugin.getHammerManager().getHammer(item[i]).isPresent()) {
+                e.setCancelled(true);
+                return;
+            }
+        }
+    }
 }

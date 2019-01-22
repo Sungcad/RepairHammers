@@ -36,59 +36,59 @@ import me.sungcad.repairhammers.listeners.RightClickListener;
 import me.sungcad.repairhammers.listeners.ShopListener;
 
 public class RepairHammerPlugin extends JavaPlugin {
-	HammerManager hammers;
-	CustomItemManager items;
-	VaultHook economy;
-	NumberFormat money;
+    HammerManager hammers;
+    CustomItemManager items;
+    VaultHook economy;
+    NumberFormat money;
 
-	@Override
-	public void onEnable() {
-		saveDefaultConfig();
-		Files.HAMMER.load(this);
-		money = new DecimalFormat(getConfig().getString("format"));
-		hammers = new HammerManager(this);
-		items = new CustomItemManager(this);
-		economy = new VaultHook(this);
-		setupCommands();
-		setupListeners();
-	}
+    @Override
+    public void onEnable() {
+        saveDefaultConfig();
+        Files.HAMMER.load(this);
+        money = new DecimalFormat(getConfig().getString("format"));
+        hammers = new HammerManager(this);
+        items = new CustomItemManager(this);
+        economy = new VaultHook(this);
+        setupCommands();
+        setupListeners();
+    }
 
-	@Override
-	public void onDisable() {
+    @Override
+    public void onDisable() {
 
-	}
+    }
 
-	public HammerManager getHammerManager() {
-		return hammers;
-	}
+    public HammerManager getHammerManager() {
+        return hammers;
+    }
 
-	public CustomItemManager getCustomItemManager() {
-		return items;
-	}
+    public CustomItemManager getCustomItemManager() {
+        return items;
+    }
 
-	public VaultHook getEconomy() {
-		return economy;
-	}
+    public VaultHook getEconomy() {
+        return economy;
+    }
 
-	public NumberFormat getFormat() {
-		return money;
-	}
+    public NumberFormat getFormat() {
+        return money;
+    }
 
-	public void reloadFormat() {
-		money = new DecimalFormat(getConfig().getString("format"));
-	}
+    public void reloadFormat() {
+        money = new DecimalFormat(getConfig().getString("format"));
+    }
 
-	void setupCommands() {
-		getCommand("hammer").setExecutor(new HammerCommand(this));
-		getCommand("hammer").setTabCompleter(new HammerTabCompleter(this));
-		getCommand("hammershop").setExecutor(new HammerShopCommand(this));
-	}
+    void setupCommands() {
+        getCommand("hammer").setExecutor(new HammerCommand(this));
+        getCommand("hammer").setTabCompleter(new HammerTabCompleter(this));
+        getCommand("hammershop").setExecutor(new HammerShopCommand(this));
+    }
 
-	void setupListeners() {
-		Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
-		Bukkit.getPluginManager().registerEvents(new CraftingListener(this), this);
-		Bukkit.getPluginManager().registerEvents(new InventoryClickListener(this, getConfig().getBoolean("use.inventory", true)), this);
-		Bukkit.getPluginManager().registerEvents(new RightClickListener(this, getConfig().getBoolean("use.rightclick", false)), this);
-		Bukkit.getPluginManager().registerEvents(new PlaceListener(this), this);
-	}
+    void setupListeners() {
+        Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new CraftingListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryClickListener(this, getConfig().getBoolean("use.inventory", true)), this);
+        Bukkit.getPluginManager().registerEvents(new RightClickListener(this, getConfig().getBoolean("use.rightclick", false)), this);
+        Bukkit.getPluginManager().registerEvents(new PlaceListener(this), this);
+    }
 }

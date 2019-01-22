@@ -42,7 +42,7 @@ rightclick:
       - '&3Repair Hammers &7Repair canceled.'
 
 # format for money values
-format: '# ,# # 0.00'
+format: '#,##0.00'
 
 # first line of /hammers list
 list: '&3Repair Hammers:'

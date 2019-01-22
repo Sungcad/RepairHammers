@@ -26,7 +26,7 @@
 #this hammer is test1 so to give it in game the command would be /rh give <player> test1
 test1:
   #name is the name the hammer item will have in game
-  name: Test hammer number 1
+  name: '&1Test hammer number 1'
   #type is what item the hammer is
   type: IRON_INGOT
   #set the data for the hammer
@@ -34,7 +34,7 @@ test1:
   #should the hammer glow
   enchanted: true
   #amount is how much the hammer will fix the item you can have it
-  #a number to fix a set amount of points to fix 50 points of damage
+  #a number to fix a set amount of points i.e. to fix 50 points of damage
   #amount: 50
   #or you can have a percent
   #amount: 50%
@@ -73,20 +73,20 @@ test1:
   #if you don't want the hammer to have lore
   #lore: []
   lore:
-  - This hammer fixes one item by 50%
-  - line 2
+  - '&7This hammer fixes one item by 50%'
+  - '&7line 2'
   #messages sent to the player when they use the hammer
   #you can add as many lines as you want
   #to not send a message use
   #use: []
   use:
-  - you have used a hammer
+  - '&3you have used a hammer'
   #messages sent to the player when they try to use this hammer
   #you can add as many lines as you want
   #to not send a message use
   #cantuse: []
   cantuse:
-  - you can't use this hammer.
+  - "&4you can't use this hammer."
   #how should the hammer look in /rh list
   listgive:
     #how it should look if the sender can buy this hammer
@@ -98,7 +98,7 @@ test1:
 #here is the start of the next hammer it is hammer2
 #the command to give it is /rh give <player> hammer2
 hammer2:
-  name: Fix all hammer
+  name: '&6Fix all hammer'
   type: GOLD_INGOT
   data: 0
   enchanted: true
@@ -116,16 +116,16 @@ hammer2:
   lore:
   - '&1This hammer fixes all items in you inventory'
   use:
-  - you used a fix all hammer
+  - '&3you used a fix all hammer'
   cantuse:
-  - you can't use this hammer.
+  - "&4you can't use this hammer."
   listgive:
     can: '&2hammer2&8 - &7repairs all items by 50'
     cant: '&4hammer2&8 - &7repairs all items by 50'
 
 #here is the third hammer
 swordhammer1:
-  name: Sword hammer
+  name: 'Sword hammer'
   type: IRON_INGOT
   data: 0
   enchanted: true
@@ -143,9 +143,9 @@ swordhammer1:
   lore:
   - '&1This hammer fixes one sword'
   use:
-  - you used a sword hammer
+  - '&3you used a sword hammer'
   cantuse:
-  - you can't use this hammer.
+  - "&4you can't use this hammer."
   listgive:
     can: '&2swordhammer1&8 - &7repairs one sword by 100%'
     cant: '&4swordhammer1&8 - &7repairs one sword by 100%'
