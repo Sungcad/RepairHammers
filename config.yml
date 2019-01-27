@@ -19,7 +19,7 @@ items:
   minecraft: true
   # fix items added by RPGItems
   rpgitems: false
-  # fix items added from AdditionsAPI
+  # fix items added from AdditionsAPI and Vanilla Additions
   additionsapi: false
   # fix hammers from this plugin
   # warning this can cause bugs (i.e. a hammer fixing itself then taking damage equal to the amount )
@@ -100,6 +100,8 @@ error:
     buy: "&cYou don't have permission."
     # error when the player tries to give a hammer and doesn't have hammers.buy or hammers.buyall.
     buycmd: "&cYou don't have permission."
+    #
+    debug:
   # errors if the target is not found.
   nf:
     # error when the targeted player is not online.

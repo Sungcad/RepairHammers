@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2019  Sungcad
+ */
 package me.sungcad.repairhammers.listeners;
 
 import org.bukkit.event.EventHandler;
@@ -16,9 +19,9 @@ public class CraftingListener implements Listener {
 
     @EventHandler
     public void craftItem(CraftItemEvent e) {
-        ItemStack[] item = e.getInventory().getMatrix();
-        for (int i = 0; i < 9; i++) {
-            if (plugin.getHammerManager().getHammer(item[i]).isPresent()) {
+        ItemStack[] items = e.getInventory().getMatrix();
+        for (ItemStack item : items) {
+            if (plugin.getHammerManager().getHammer(item).isPresent()) {
                 e.setCancelled(true);
                 return;
             }

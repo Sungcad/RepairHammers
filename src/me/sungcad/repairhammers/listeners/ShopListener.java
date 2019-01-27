@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018  Sungcad
+ * Copyright (C) 2019  Sungcad
  */
 package me.sungcad.repairhammers.listeners;
 
@@ -36,25 +36,13 @@ public class ShopListener implements Listener {
         Hammer hammer = ohammer.get();
         ItemStack item = hammer.getHammerItem(1);
         Player player = (Player) e.getWhoClicked();
-        if (hammer.getBuyCost() > 0) {
-            if (plugin.getEconomy().isLoaded()) {
-                if (plugin.getEconomy().getEconomy().has(player, hammer.getBuyCost())) {
-                    player.closeInventory();
-                    plugin.getEconomy().getEconomy().withdrawPlayer(player, hammer.getBuyCost());
-                    giveHammer(player, item);
-                } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.buy").replace("<cost>", plugin.getFormat().format(hammer.getBuyCost()))));
-                    return;
-                }
-            } else {
-                plugin.getLogger().warning("Vault not found");
-                plugin.getLogger().warning("Hammers with a cost are free");
-                player.closeInventory();
-                giveHammer(player, item);
-            }
-        } else {
+        if (hammer.canAfford(player, true)) {
             player.closeInventory();
+            hammer.payCost(player, true);
             giveHammer(player, item);
+        } else {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.buy").replace("<cost>", plugin.getFormat().format(hammer.getBuyCost()))));
+            return;
         }
     }
 

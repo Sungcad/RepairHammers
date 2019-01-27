@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018  Sungcad
+ * Copyright (C) 2019  Sungcad
  */
 package me.sungcad.repairhammers.listeners;
 
@@ -72,18 +72,11 @@ public class RightClickListener implements Listener {
                 damage = Math.min(hook.getDamage(target), hammer.getFixAmount(player.getInventory().getItem(slot)));
             if (damage <= 0)
                 return;
-            if (hammer.getUseCost() > 0) {
-                if (plugin.getEconomy().isLoaded()) {
-                    if (plugin.getEconomy().getEconomy().has(player, hammer.getUseCost())) {
-                        plugin.getEconomy().getEconomy().withdrawPlayer(player, hammer.getUseCost());
-                    } else {
-                        player.sendMessage(translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.use").replace("<cost>", plugin.getFormat().format(hammer.getUseCost()))));
-                        return;
-                    }
-                } else {
-                    plugin.getLogger().warning("Vault not found");
-                    plugin.getLogger().warning("Hammers with a cost are free");
-                }
+            if (hammer.canAfford(player, false)) {
+                hammer.payCost(player, false);
+            } else {
+                player.sendMessage(translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.use").replace("<cost>", plugin.getFormat().format(hammer.getUseCost()))));
+                return;
             }
             if (hammer.useDurability(player.getInventory().getItem(slot), damage) == null)
                 player.getInventory().setItem(slot, null);

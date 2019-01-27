@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2019  Sungcad
+ */
 package me.sungcad.repairhammers.hammers;
 
 import java.util.List;

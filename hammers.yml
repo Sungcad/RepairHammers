@@ -8,9 +8,20 @@
 #  amount: how much should the hammer fix
 #  consume: should the hammer consumed durablity when used, doesn't work for percentage hammers
 #  destroy: should the hammer be destroyed when used
+#  crafting:
+#    craftable: set to true to enable crafting the hammer
+#    shape:
+#      1: three characters to define the top row of the recipe
+#      2: three characters to define the top row of the recipe
+#      3: three characters to define the top row of the recipe
+#    material: 
+#      set the materials to be used in crafting the hammer here
 #  cost:
-#    use: cost to used
+#    use: cost to use
 #    buy: cost to buy
+#    type:
+#        buy: what should the player spend to buy this hammer
+#        use: what should the player spend to use the hammer
 #  shop:
 #    row: location top to bottom
 #    column: location left to right
@@ -49,6 +60,24 @@ test1:
   #true - hammer is destroyed on use
   #false - you can use the hammer more than once
   destroy: true
+  #Setting to make a hammer craftable
+  crafting:
+    #true false should this hammer be craftable
+    craftable: true
+    #shape of crafting recipe
+    #this shape uses 6 items of the same type and 1 item of an other type
+    shape:
+      #top line of the recipe make sure it is 3 characters 
+      1: "iii"
+      #middle line of the recipe make sure it is 3 characters 
+      2: "iii"
+      #bottom line of the recipe make sure it is 3 characters 
+      3: " s "
+    #set the material of the items needed to craft the hammer
+    #all letters that are in the shape should have a matterial set
+    material:
+      i: IRON_INGOT
+      s: STICK
   #cost is the cost to buy or use the hammer
   #if you are not using vault make sure to set both to 0 or 0.0 or you will get warnings
   cost:
@@ -56,6 +85,15 @@ test1:
     buy: 100.0
     #cost to use the hammer
     use: 0.0
+    #what curency should this hammer use
+    #for money use money m or $
+    #for levels use level lvl or l
+    #for experience use experience exp or xp
+    type:
+      #curency to buy the hammer
+      buy: money
+      #curency to use the hammer
+      use: money
   #shop settiing are only used if shop.default is set to false in the config.yml
   shop:
     #the top row is 0
@@ -105,9 +143,21 @@ hammer2:
   amount: 50
   consume: true
   destroy: true
+  crafting:
+    craftable: false
+    shape:
+      1: "ii "
+      2: "si "
+      3: "   "
+    material:
+      i: IRON_INGOT
+      s: STICKe
   cost:
     buy: 1000.0
     use: 0.0
+    type:
+      buy: money
+      use: money
   shop:
     row: 1
     column: 4
@@ -132,9 +182,21 @@ swordhammer1:
   amount: 100%
   consume: false
   destroy: true
+  crafting:
+    craftable: true
+    shape:
+      1: "ggg"
+      2: "ggg"
+      3: " s "
+    material:
+      g: GOLD_INGOT
+      s: STICK
   cost:
     buy: 50.0
     use: 50.0
+    type:
+      buy: money
+      use: money
   shop:
     row: 1
     column: 7

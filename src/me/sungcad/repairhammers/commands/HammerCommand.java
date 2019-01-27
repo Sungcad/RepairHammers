@@ -1,22 +1,30 @@
 /*
- * Copyright (C) 2018  Sungcad
+ * Copyright (C) 2019  Sungcad
  */
 package me.sungcad.repairhammers.commands;
+
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.YELLOW;
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
-
-import static org.bukkit.ChatColor.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import com.chrismin13.additionsapi.items.CustomItemStack;
+
 import me.sungcad.repairhammers.Files;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 import me.sungcad.repairhammers.hammers.Hammer;
 import me.sungcad.repairhammers.itemhooks.AdditionsAPIHook;
+import me.sungcad.repairhammers.itemhooks.CustomItemHook;
 import me.sungcad.repairhammers.itemhooks.DefaultItemHook;
 import me.sungcad.repairhammers.itemhooks.HammerItemHook;
 import me.sungcad.repairhammers.itemhooks.RPGItemsHook;
@@ -66,15 +74,11 @@ public class HammerCommand implements CommandExecutor {
                                         sender.sendMessage(translateAlternateColorCodes('&', plugin.getConfig().getString("error.nan")));
                                         return true;
                                     }
-                                    double cost = hammer.getBuyCost() * amount;
-                                    if (plugin.getEconomy().isLoaded() && cost > 0) {
-                                        if (plugin.getEconomy().getEconomy().has(player, cost)) {
-                                            plugin.getEconomy().getEconomy().withdrawPlayer(player, cost);
-                                        } else {
-                                            player.sendMessage(translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.buy").replace("<cost>", plugin.getFormat().format(cost))));
-                                            return true;
-                                        }
+                                    if (!hammer.canAfford(player, true)) {
+                                        player.sendMessage(translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.buy").replace("<cost>", plugin.getFormat().format(hammer.getBuyCost() * amount))));
+                                        return true;
                                     }
+                                    hammer.payCost(player, true);
                                     ItemStack item = hammer.getHammerItem(amount);
                                     if (player.getInventory().firstEmpty() != -1)
                                         player.getInventory().addItem(item);
@@ -152,6 +156,19 @@ public class HammerCommand implements CommandExecutor {
                 }
             } else if (args[0].equalsIgnoreCase("shop")) {
                 Bukkit.dispatchCommand(sender, "hammershop");
+                return true;
+            } else if (args[0].equalsIgnoreCase("debug")) {
+                if (sender.hasPermission("hammers.debug")) {
+                    if (sender instanceof Player && args.length >= 2 && args[1].equalsIgnoreCase("item")) {
+                        @SuppressWarnings("deprecation")
+                        ItemStack item = ((Player) sender).getItemInHand();
+                        CustomItemHook h = plugin.getCustomItemManager().getHook(item);
+                        boolean aapi = h instanceof AdditionsAPIHook, rpgi = h instanceof RPGItemsHook, rhi = h instanceof HammerItemHook;
+                        sender.sendMessage(GRAY+"Item type: "+GREEN + (aapi ? "AdditionsAPI item" : rpgi ? "RPGItems item" : rhi ? "RepairHammer item" : "vanilla item"));
+                        sender.sendMessage(GRAY+"name for fixlist: "+GOLD + (aapi ? new CustomItemStack(item).getCustomItem().getIdName() : item.getType()));
+                    }
+                } else
+                    sender.sendMessage(translateAlternateColorCodes('&', plugin.getConfig().getString("error.np.info")));
                 return true;
             }
         }

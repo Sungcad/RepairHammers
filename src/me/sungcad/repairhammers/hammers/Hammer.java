@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018  Sungcad
+ * Copyright (C) 2019  Sungcad
  */
 package me.sungcad.repairhammers.hammers;
 
@@ -79,4 +79,13 @@ public interface Hammer {
 
     // check if the hammers fix amount is a percentage
     public boolean isPercent();
+    
+    // check if the player is able to pay for the hammer
+    // set buy to false for use cost
+    public boolean canAfford(Player player, boolean buy);
+ 
+    // make the player pay for the hammer
+    // set buy to false for use cost
+    public boolean payCost(Player player, boolean buy);
+    
 }

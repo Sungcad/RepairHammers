@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2019  Sungcad
+ */
 package me.sungcad.repairhammers.listeners;
 
 import org.bukkit.event.EventHandler;

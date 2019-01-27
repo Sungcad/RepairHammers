@@ -1,6 +1,6 @@
 /*
  * 
- *  Copyright (C) 2018  Sungcad
+ *  Copyright (C) 2019  Sungcad
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -27,6 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.sungcad.repairhammers.commands.HammerCommand;
 import me.sungcad.repairhammers.commands.HammerShopCommand;
 import me.sungcad.repairhammers.commands.HammerTabCompleter;
+import me.sungcad.repairhammers.costs.VaultHook;
 import me.sungcad.repairhammers.hammers.HammerManager;
 import me.sungcad.repairhammers.itemhooks.CustomItemManager;
 import me.sungcad.repairhammers.listeners.CraftingListener;
@@ -40,9 +41,11 @@ public class RepairHammerPlugin extends JavaPlugin {
     CustomItemManager items;
     VaultHook economy;
     NumberFormat money;
+    static RepairHammerPlugin plugin;
 
     @Override
     public void onEnable() {
+        plugin = this;
         saveDefaultConfig();
         Files.HAMMER.load(this);
         money = new DecimalFormat(getConfig().getString("format"));
@@ -90,5 +93,9 @@ public class RepairHammerPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InventoryClickListener(this, getConfig().getBoolean("use.inventory", true)), this);
         Bukkit.getPluginManager().registerEvents(new RightClickListener(this, getConfig().getBoolean("use.rightclick", false)), this);
         Bukkit.getPluginManager().registerEvents(new PlaceListener(this), this);
+    }
+
+    public static RepairHammerPlugin getPlugin() {
+        return plugin;
     }
 }

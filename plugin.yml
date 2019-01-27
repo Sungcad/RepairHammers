@@ -2,7 +2,7 @@ name: RepairHammers
 author: Sungcad
 website: https://www.spigotmc.org/resources/repair-hammers.44699/
 main: me.sungcad.repairhammers.RepairHammerPlugin
-version: 1.1.2
+version: 1.1.3
 softdepend:
   - Vault
   - RPGItems
@@ -31,6 +31,7 @@ permissions:
       hammers.listall: true
       hammers.reload: true
       hammers.shop: true
+      hammers.debug: true
   hammers.buy:
     description: Gives access to buy hammers
     children:
@@ -65,5 +66,9 @@ permissions:
       hammers.command: true
   hammers.info:
     description: Gives access to view the plugin information
+    children:
+      hammers.command: true
+  hammers.debug:
+    description: Gives access to debuging commands
     children:
       hammers.command: true

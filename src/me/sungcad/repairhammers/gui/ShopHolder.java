@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018  Sungcad
+ * Copyright (C) 2019  Sungcad
  */
 package me.sungcad.repairhammers.gui;
 
@@ -34,7 +34,7 @@ public class ShopHolder implements InventoryHolder {
         List<Hammer> hammers = new ArrayList<>();
         plugin.getHammerManager().getHammers().stream().filter(hammer -> hammer.canBuy(player)).forEach(hammer -> hammers.add(hammer));
         Inventory inv;
-        if (plugin.getConfig().getBoolean("shop.default")) {
+        if (plugin.getConfig().getBoolean("shop.default", true)) {
             int size = ((hammers.size() / 9) * 9) + (hammers.size() % 9 > 0 ? 9 : 0);
             inv = Bukkit.createInventory(this, size, translateAlternateColorCodes('&', plugin.getConfig().getString("shop.name")));
             for (Hammer hammer : hammers) {

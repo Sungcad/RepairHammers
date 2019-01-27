@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018  Sungcad
+ * Copyright (C) 2019  Sungcad
  */
 package me.sungcad.repairhammers.commands;
 
@@ -16,7 +16,7 @@ import org.bukkit.util.StringUtil;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 
 public class HammerTabCompleter implements TabCompleter {
-	private final List<String> arg1 = Arrays.asList("buy", "give", "help", "info", "list", "reload", "shop");
+	private final List<String> arg1 = Arrays.asList("buy", "give", "help", "info", "list", "reload", "shop", "debug");
 	private RepairHammerPlugin plugin;
 
 	public HammerTabCompleter(RepairHammerPlugin plugin) {
