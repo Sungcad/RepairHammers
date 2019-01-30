@@ -100,8 +100,8 @@ error:
     buy: "&cYou don't have permission."
     # error when the player tries to give a hammer and doesn't have hammers.buy or hammers.buyall.
     buycmd: "&cYou don't have permission."
-    #
-    debug:
+    # error when the player tries to use debug command with out permission
+    debug: "&cYou don't have permission."
   # errors if the target is not found.
   nf:
     # error when the targeted player is not online.

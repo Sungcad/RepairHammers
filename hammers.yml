@@ -3,7 +3,6 @@
 #hammername: name of the hammer for commands
 #  name: Item Name
 #  type: item the hammer should be
-#  data: set item data such as color or damage
 #  enchanted: should the hammer have the enchanted glow
 #  amount: how much should the hammer fix
 #  consume: should the hammer consumed durablity when used, doesn't work for percentage hammers
@@ -40,8 +39,6 @@ test1:
   name: '&1Test hammer number 1'
   #type is what item the hammer is
   type: IRON_INGOT
-  #set the data for the hammer
-  data: 0
   #should the hammer glow
   enchanted: true
   #amount is how much the hammer will fix the item you can have it
@@ -85,14 +82,14 @@ test1:
     buy: 100.0
     #cost to use the hammer
     use: 0.0
-    #what curency should this hammer use
+    #what currency should this hammer use
     #for money use money m or $
     #for levels use level lvl or l
     #for experience use experience exp or xp
     type:
-      #curency to buy the hammer
+      #currency to buy the hammer
       buy: money
-      #curency to use the hammer
+      #currency to use the hammer
       use: money
   #shop settiing are only used if shop.default is set to false in the config.yml
   shop:
@@ -138,7 +135,6 @@ test1:
 hammer2:
   name: '&6Fix all hammer'
   type: GOLD_INGOT
-  data: 0
   enchanted: true
   amount: 50
   consume: true
@@ -177,7 +173,6 @@ hammer2:
 swordhammer1:
   name: 'Sword hammer'
   type: IRON_INGOT
-  data: 0
   enchanted: true
   amount: 100%
   consume: false

@@ -25,6 +25,7 @@ public interface EditableHammer extends Hammer {
     public void setConsume(boolean consume);
 
     // edit hammer item durability
+    @Deprecated
     public void setData(short data);
 
     // edit if the hammer is destroyed on use

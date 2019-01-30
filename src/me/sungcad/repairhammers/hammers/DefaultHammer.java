@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
@@ -36,7 +37,6 @@ public class DefaultHammer implements EditableHammer {
     private boolean consume, destroy, enchanted, fixall, percent;
     private String displayname, listcan, listcant;
     private List<String> cantuse, fixlist, lore, use;
-    private short data;
     private int fixamount, shoprow, shopcolumn;
     private double buycost, usecost;
     private Material type;
@@ -46,7 +46,6 @@ public class DefaultHammer implements EditableHammer {
     protected DefaultHammer(String name, ConfigurationSection config, RepairHammerPlugin plugin) {
         this.name = name;
         this.plugin = plugin;
-        setData((byte) config.getInt("data", 0));
         setPercent(config.getString("amount", "50%").endsWith("%"));
         setFixAmount(Integer.valueOf(config.getString("amount", "50%").replace("%", "")));
         setConsume(config.getBoolean("consume", true));
@@ -67,11 +66,11 @@ public class DefaultHammer implements EditableHammer {
         setupCrafting(config);
     }
 
-    @SuppressWarnings("deprecation")
     private void setupCrafting(ConfigurationSection config) {
         if (config.getBoolean("crafting.craftable", false)) {
             ItemStack hammer = getHammerItem(1);
-            ShapedRecipe recipe = new ShapedRecipe(hammer);
+            NamespacedKey key = new NamespacedKey(plugin, name);
+            ShapedRecipe recipe = new ShapedRecipe(key, hammer);
             recipe.shape(config.getString("crafting.shape.1"), config.getString("crafting.shape.2"), config.getString("crafting.shape.3"));
             for (String s : config.getConfigurationSection("crafting.material").getKeys(false)) {
                 recipe.setIngredient(s.charAt(0), Material.valueOf(config.getString("crafting.material." + s, "AIR")));
@@ -83,7 +82,6 @@ public class DefaultHammer implements EditableHammer {
     protected DefaultHammer(String name, RepairHammerPlugin plugin) {
         this.name = name;
         this.plugin = plugin;
-        setData((byte) 0);
         setEnchanted(true);
         setFixAll(false);
         setPercent(true);
@@ -138,11 +136,9 @@ public class DefaultHammer implements EditableHammer {
     public boolean equals(ItemStack item) {
         if (item != null) {
             if (type.equals(item.getType())) {
-                if (item.getDurability() == data) {
-                    if (displayname.equals(item.getItemMeta().getDisplayName())) {
-                        if (item.getItemMeta().getLore().containsAll(lore)) {
-                            return true;
-                        }
+                if (displayname.equals(item.getItemMeta().getDisplayName())) {
+                    if (item.getItemMeta().getLore().containsAll(lore)) {
+                        return true;
                     }
                 }
             }
@@ -193,7 +189,7 @@ public class DefaultHammer implements EditableHammer {
 
     @Override
     public ItemStack getHammerItem(int number) {
-        ItemStack item = new ItemStack(type, number, data);
+        ItemStack item = new ItemStack(type, number);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(displayname);
         if (consume) {
@@ -268,7 +264,6 @@ public class DefaultHammer implements EditableHammer {
     @Override
     public void reload() {
         ConfigurationSection config = Files.HAMMER.getConfig().getConfigurationSection(name);
-        setData((byte) config.getInt("data", 0));
         setPercent(config.getString("amount", "50%").endsWith("%"));
         setFixAmount(Integer.valueOf(config.getString("amount", "50%").replace("%", "")));
         setConsume(config.getBoolean("consume", true));
@@ -291,7 +286,6 @@ public class DefaultHammer implements EditableHammer {
     @Override
     public void save() {
         ConfigurationSection config = Files.HAMMER.getConfig().getConfigurationSection(name);
-        config.set("data", data);
         config.set("type", type);
         config.set("consume", consume);
         config.set("destroy", destroy);
@@ -369,11 +363,6 @@ public class DefaultHammer implements EditableHammer {
             this.consume = false;
         else
             this.consume = consume;
-    }
-
-    @Override
-    public void setData(short data) {
-        this.data = data;
     }
 
     @Override
@@ -510,5 +499,9 @@ public class DefaultHammer implements EditableHammer {
             }
         }
         return hammer;
+    }
+
+    @Override
+    public void setData(short data) {
     }
 }

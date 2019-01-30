@@ -4,6 +4,7 @@
 package me.sungcad.repairhammers.itemhooks;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 public class DefaultItemHook implements CustomItemHook {
 
@@ -19,13 +20,14 @@ public class DefaultItemHook implements CustomItemHook {
 
     @Override
     public ItemStack fixItem(ItemStack item, int amount) {
-        item.setDurability((short) Math.max(0, item.getDurability() - amount));
+        ((Damageable) item).setDamage(Math.max(0, ((Damageable) item).getDamage() - amount));
         return item;
     }
 
     @Override
     public int getDamage(ItemStack item) {
-        return item.getDurability();
+        Damageable d = (Damageable) item;
+        return d.getDamage();
     }
 
     @Override
@@ -40,7 +42,11 @@ public class DefaultItemHook implements CustomItemHook {
 
     @Override
     public boolean isDamaged(ItemStack item) {
-        return item.getDurability() > 0;
+        if (item instanceof Damageable) {
+            Damageable d = (Damageable) item;
+            return d.hasDamage();
+        }
+        return false;
     }
 
     @Override
@@ -50,7 +56,7 @@ public class DefaultItemHook implements CustomItemHook {
 
     @Override
     public boolean setDamage(ItemStack item, int amount) {
-        item.setDurability((short) amount);
+        ((Damageable) item).setDamage(amount);
         return true;
     }
 }
