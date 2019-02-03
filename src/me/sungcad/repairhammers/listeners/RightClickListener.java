@@ -100,7 +100,7 @@ public class RightClickListener implements Listener {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        if (timeouts.get(player).equals(time)) {
+                        if (timeouts.containsKey(player) && timeouts.get(player).equals(time)) {
                             timeouts.remove(player);
                             players.remove(player);
                             plugin.getConfig().getStringList("rightclick.timeout.message").forEach(line -> player.sendMessage(translateAlternateColorCodes('&', line)));

@@ -176,6 +176,7 @@ fixlist:
     - STONE_PICKAXE
     - STONE_SPADE
     - STONE_SWORD
+    - TRIDENT
     - WOOD_AXE
     - WOOD_HOE
     - WOOD_PICKAXE

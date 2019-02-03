@@ -20,13 +20,13 @@ public class DefaultItemHook implements CustomItemHook {
 
     @Override
     public ItemStack fixItem(ItemStack item, int amount) {
-        ((Damageable) item).setDamage(Math.max(0, ((Damageable) item).getDamage() - amount));
+        ((Damageable) item.getItemMeta()).setDamage(Math.max(0, ((Damageable) item).getDamage() - amount));
         return item;
     }
 
     @Override
     public int getDamage(ItemStack item) {
-        Damageable d = (Damageable) item;
+        Damageable d = (Damageable) item.getItemMeta();
         return d.getDamage();
     }
 
@@ -37,13 +37,13 @@ public class DefaultItemHook implements CustomItemHook {
 
     @Override
     public boolean isCustomItem(ItemStack item) {
-        return item instanceof Damageable;
+        return item.getItemMeta() instanceof Damageable;
     }
 
     @Override
     public boolean isDamaged(ItemStack item) {
-        if (item instanceof Damageable) {
-            Damageable d = (Damageable) item;
+        if (item.getItemMeta() instanceof Damageable) {
+            Damageable d = (Damageable) item.getItemMeta();
             return d.hasDamage();
         }
         return false;
@@ -56,7 +56,7 @@ public class DefaultItemHook implements CustomItemHook {
 
     @Override
     public boolean setDamage(ItemStack item, int amount) {
-        ((Damageable) item).setDamage(amount);
+        ((Damageable) item.getItemMeta()).setDamage(amount);
         return true;
     }
 }
