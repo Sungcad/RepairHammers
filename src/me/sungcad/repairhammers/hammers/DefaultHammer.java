@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.chrismin13.additionsapi.items.CustomItemStack;
@@ -37,7 +38,7 @@ public class DefaultHammer implements EditableHammer {
     private boolean consume, destroy, enchanted, fixall, percent;
     private String displayname, listcan, listcant;
     private List<String> cantuse, fixlist, lore, use;
-    private int fixamount, shoprow, shopcolumn;
+    private int fixamount, shoprow, shopcolumn, damage;
     private double buycost, usecost;
     private Material type;
     private Cost buycosttype, usecosttype;
@@ -58,12 +59,14 @@ public class DefaultHammer implements EditableHammer {
         setFixlist(plugin.getConfig().getStringList("fixlist." + config.getString("fixlist", "all")));
         setMaterial(Material.valueOf(config.getString("type", "IRON_INGOT")));
         setItemName(config.getString("name", "Hammer"));
+        setDamage(config.getInt("damage"));
         setBuyListCan(config.getString("listgive.can", "&2" + name + " &7fix one item by " + fixamount + (percent ? "%" : "")));
         setBuyListCant(config.getString("listgive.cant", "&4" + name + " &7fix one item by " + fixamount + (percent ? "%" : "")));
         setCantUseMessage(config.getStringList("cantuse"));
         setLore(config.getStringList("lore"));
         setUseMessage(config.getStringList("use"));
         setupCrafting(config);
+
     }
 
     private void setupCrafting(ConfigurationSection config) {
@@ -203,6 +206,8 @@ public class DefaultHammer implements EditableHammer {
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
         item.setItemMeta(meta);
+        if (item instanceof Damageable)
+            ((Damageable) item).setDamage(damage);
         return item;
     }
 
@@ -289,6 +294,7 @@ public class DefaultHammer implements EditableHammer {
         config.set("type", type);
         config.set("consume", consume);
         config.set("destroy", destroy);
+        config.set("damage", damage);
         config.set("enchanted", enchanted);
         config.set("cost.use", usecost);
         config.set("cost.buy", buycost);
@@ -503,5 +509,11 @@ public class DefaultHammer implements EditableHammer {
 
     @Override
     public void setData(short data) {
+        damage = data;
+    }
+
+    @Override
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }

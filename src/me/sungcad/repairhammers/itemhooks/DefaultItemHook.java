@@ -37,7 +37,7 @@ public class DefaultItemHook implements CustomItemHook {
 
     @Override
     public boolean isCustomItem(ItemStack item) {
-        return true;
+        return item instanceof Damageable;
     }
 
     @Override

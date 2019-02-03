@@ -28,6 +28,9 @@ public interface EditableHammer extends Hammer {
     @Deprecated
     public void setData(short data);
 
+    // edit hammer item damage
+    public void setDamage(int data);
+    
     // edit if the hammer is destroyed on use
     public void setDestroy(boolean destroy);
 
