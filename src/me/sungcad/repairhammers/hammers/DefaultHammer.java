@@ -18,6 +18,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -43,6 +44,7 @@ public class DefaultHammer implements EditableHammer {
     private Material type;
     private Cost buycosttype, usecosttype;
     private RepairHammerPlugin plugin;
+    ShapedRecipe recipe;
 
     protected DefaultHammer(String name, ConfigurationSection config, RepairHammerPlugin plugin) {
         this.name = name;
@@ -73,12 +75,23 @@ public class DefaultHammer implements EditableHammer {
         if (config.getBoolean("crafting.craftable", false)) {
             ItemStack hammer = getHammerItem(1);
             NamespacedKey key = new NamespacedKey(plugin, name);
-            ShapedRecipe recipe = new ShapedRecipe(key, hammer);
+            recipe = new ShapedRecipe(key, hammer);
             recipe.shape(config.getString("crafting.shape.1"), config.getString("crafting.shape.2"), config.getString("crafting.shape.3"));
             for (String s : config.getConfigurationSection("crafting.material").getKeys(false)) {
                 recipe.setIngredient(s.charAt(0), Material.valueOf(config.getString("crafting.material." + s, "AIR")));
             }
             Bukkit.addRecipe(recipe);
+        }
+    }
+
+    public void removeRecipe() {
+        if (recipe != null) {
+            while (plugin.getServer().recipeIterator().hasNext()) {
+                Recipe recp = plugin.getServer().recipeIterator().next();
+                if (recp.equals(recipe)) {
+                    plugin.getServer().recipeIterator().remove();
+                }
+            }
         }
     }
 
@@ -275,8 +288,8 @@ public class DefaultHammer implements EditableHammer {
         setDestroy(config.getBoolean("destroy", true));
         setEnchanted(config.getBoolean("enchanted", true));
         setFixAll(config.getBoolean("fixall", false));
-        setUseCost(config.getDouble("cost.use", 0.0));
-        setBuyCost(config.getDouble("cost.buy", 0.0));
+        setUseCost(config.getDouble("cost.use", 0.0), config.getString("cost.type.use", "m"));
+        setBuyCost(config.getDouble("cost.buy", 0.0), config.getString("cost.type.buy", "m"));
         setShopLocation(config.getInt("shop.row", 0), config.getInt("shop.column", 0));
         setFixlist(plugin.getConfig().getStringList("fixlist." + config.getString("fixlist", "all")));
         setMaterial(Material.valueOf(config.getString("type", "IRON_INGOT")));

@@ -86,11 +86,12 @@ test1:
     #for money use money m or $
     #for levels use level lvl or l
     #for experience use experience exp or xp
+    #for nothing use none or n
     type:
       #currency to buy the hammer
       buy: money
       #currency to use the hammer
-      use: money
+      use: none
   #shop settiing are only used if shop.default is set to false in the config.yml
   shop:
     #the top row is 0
