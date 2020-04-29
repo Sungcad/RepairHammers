@@ -18,8 +18,8 @@ import me.sungcad.repairhammers.hammers.Hammer;
 import me.sungcad.repairhammers.itemhooks.CustomItemHook;
 
 public class InventoryClickListener implements Listener {
-    RepairHammerPlugin plugin;
-    static boolean enabled;
+    private RepairHammerPlugin plugin;
+    private static boolean enabled;
 
     public InventoryClickListener(RepairHammerPlugin plugin, boolean enable) {
         this.plugin = plugin;

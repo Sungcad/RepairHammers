@@ -44,6 +44,7 @@ public class HammerManager {
         for (Hammer hammer : newhammers) {
             if (hammer instanceof DefaultHammer) {
                 hammers.remove(hammer);
+                ((DefaultHammer) hammer).removeRecipe();
             }
         }
         Files.HAMMER.getConfig().getKeys(false).stream().forEach(cnf -> hammers.add(new DefaultHammer(cnf, Files.HAMMER.getConfig().getConfigurationSection(cnf), plugin)));

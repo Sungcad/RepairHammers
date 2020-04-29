@@ -24,11 +24,11 @@ import me.sungcad.repairhammers.hammers.Hammer;
 import me.sungcad.repairhammers.itemhooks.CustomItemHook;
 
 public class RightClickListener implements Listener {
-    RepairHammerPlugin plugin;
-    Map<Player, Hammer> players;
-    Map<Player, Long> timeouts;
-    static boolean enabled;
-    static int timeout;
+    private RepairHammerPlugin plugin;
+    private Map<Player, Hammer> players;
+    private Map<Player, Long> timeouts;
+    private static boolean enabled;
+    private static int timeout;
 
     public RightClickListener(RepairHammerPlugin plugin, boolean used) {
         this.plugin = plugin;
@@ -38,7 +38,6 @@ public class RightClickListener implements Listener {
         timeouts = new HashMap<>();
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onClick(PlayerInteractEvent event) {
         if (!enabled)
@@ -56,7 +55,7 @@ public class RightClickListener implements Listener {
                 plugin.getConfig().getStringList("rightclick.notfound").forEach(line -> player.sendMessage(translateAlternateColorCodes('&', line)));
                 return;
             }
-            ItemStack target = player.getItemInHand();
+            ItemStack target = player.getInventory().getItemInMainHand();
             if (!hammer.canFix(target) || !hammer.canUse(player)) {
                 hammer.getCantUseMessage().forEach(s -> player.sendMessage(translateAlternateColorCodes('&', s)));
                 return;
@@ -91,7 +90,7 @@ public class RightClickListener implements Listener {
             }
             hammer.getUseMessage().forEach(line -> player.sendMessage(translateAlternateColorCodes('&', line)));
         } else {
-            Optional<Hammer> ohammer = plugin.getHammerManager().getHammer(player.getItemInHand());
+            Optional<Hammer> ohammer = plugin.getHammerManager().getHammer(player.getInventory().getItemInMainHand());
             if (ohammer.isPresent()) {
                 event.setCancelled(true);
                 players.put(player, ohammer.get());
@@ -101,7 +100,7 @@ public class RightClickListener implements Listener {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        if (timeouts.get(player).equals(time)) {
+                        if (timeouts.containsKey(player) && timeouts.get(player).equals(time)) {
                             timeouts.remove(player);
                             players.remove(player);
                             plugin.getConfig().getStringList("rightclick.timeout.message").forEach(line -> player.sendMessage(translateAlternateColorCodes('&', line)));

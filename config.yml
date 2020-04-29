@@ -100,7 +100,7 @@ error:
     buy: "&cYou don't have permission."
     # error when the player tries to give a hammer and doesn't have hammers.buy or hammers.buyall.
     buycmd: "&cYou don't have permission."
-    # error when a player tries to use a debug command without permission.
+    # error when the player tries to use debug command with out permission
     debug: "&cYou don't have permission."
   # errors if the target is not found.
   nf:
@@ -176,6 +176,7 @@ fixlist:
     - STONE_PICKAXE
     - STONE_SPADE
     - STONE_SWORD
+    - TRIDENT
     - WOOD_AXE
     - WOOD_HOE
     - WOOD_PICKAXE

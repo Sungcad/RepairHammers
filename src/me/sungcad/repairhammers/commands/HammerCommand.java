@@ -160,15 +160,14 @@ public class HammerCommand implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("debug")) {
                 if (sender.hasPermission("hammers.debug")) {
                     if (sender instanceof Player && args.length >= 2 && args[1].equalsIgnoreCase("item")) {
-                        @SuppressWarnings("deprecation")
-                        ItemStack item = ((Player) sender).getItemInHand();
+                        ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
                         CustomItemHook h = plugin.getCustomItemManager().getHook(item);
                         boolean aapi = h instanceof AdditionsAPIHook, rpgi = h instanceof RPGItemsHook, rhi = h instanceof HammerItemHook;
-                        sender.sendMessage(GRAY+"Item type: "+GREEN + (aapi ? "AdditionsAPI item" : rpgi ? "RPGItems item" : rhi ? "RepairHammer item" : "vanilla item"));
-                        sender.sendMessage(GRAY+"name for fixlist: "+GOLD + (aapi ? new CustomItemStack(item).getCustomItem().getIdName() : item.getType()));
+                        sender.sendMessage(GRAY + "Item type: " + GREEN + (aapi ? "AdditionsAPI item" : rpgi ? "RPGItems item" : rhi ? "RepairHammer item" : "vanilla item"));
+                        sender.sendMessage(GRAY + "name for fixlist: " + GOLD + (aapi ? new CustomItemStack(item).getCustomItem().getIdName() : item.getType()));
                     }
                 } else
-                    sender.sendMessage(translateAlternateColorCodes('&', plugin.getConfig().getString("error.np.info")));
+                    sender.sendMessage(translateAlternateColorCodes('&', plugin.getConfig().getString("error.np.debug")));
                 return true;
             }
         }

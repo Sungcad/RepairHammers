@@ -4,6 +4,8 @@
 package me.sungcad.repairhammers.itemhooks;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class DefaultItemHook implements CustomItemHook {
 
@@ -19,13 +21,16 @@ public class DefaultItemHook implements CustomItemHook {
 
     @Override
     public ItemStack fixItem(ItemStack item, int amount) {
-        item.setDurability((short) Math.max(0, item.getDurability() - amount));
+        ItemMeta meta = item.getItemMeta();
+        ((Damageable) meta).setDamage(Math.max(0, ((Damageable) item.getItemMeta()).getDamage() - amount));
+        item.setItemMeta((ItemMeta) meta);
         return item;
     }
 
     @Override
     public int getDamage(ItemStack item) {
-        return item.getDurability();
+        Damageable d = (Damageable) item.getItemMeta();
+        return d.getDamage();
     }
 
     @Override
@@ -35,12 +40,16 @@ public class DefaultItemHook implements CustomItemHook {
 
     @Override
     public boolean isCustomItem(ItemStack item) {
-        return true;
+        return item.getItemMeta() instanceof Damageable;
     }
 
     @Override
     public boolean isDamaged(ItemStack item) {
-        return item.getDurability() > 0;
+        if (item.getItemMeta() instanceof Damageable) {
+            Damageable d = (Damageable) item.getItemMeta();
+            return d.hasDamage();
+        }
+        return false;
     }
 
     @Override
@@ -50,7 +59,7 @@ public class DefaultItemHook implements CustomItemHook {
 
     @Override
     public boolean setDamage(ItemStack item, int amount) {
-        item.setDurability((short) amount);
+        ((Damageable) item.getItemMeta()).setDamage(amount);
         return true;
     }
 }
