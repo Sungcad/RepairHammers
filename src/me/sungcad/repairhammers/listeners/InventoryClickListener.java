@@ -5,6 +5,7 @@ package me.sungcad.repairhammers.listeners;
 
 import java.util.Optional;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +15,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
 import me.sungcad.repairhammers.RepairHammerPlugin;
+import me.sungcad.repairhammers.events.HammerUseEvent;
 import me.sungcad.repairhammers.hammers.Hammer;
 import me.sungcad.repairhammers.itemhooks.CustomItemHook;
 
@@ -60,12 +62,15 @@ public class InventoryClickListener implements Listener {
 		if (damage <= 0)
 			return;
 		e.setCancelled(true);
-		if (hammer.canAfford(player, false)) {
-			hammer.payCost(player, false);
-		} else {
+		if (!hammer.canAfford(player, false)) {
 			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.use").replace("<cost>", plugin.getFormat().format(hammer.getUseCost()))));
 			return;
 		}
+		HammerUseEvent hue = new HammerUseEvent(hammer, player, e.getSlot());
+		Bukkit.getPluginManager().callEvent(hue);
+		if (hue.isCancelled())
+			return;
+		hammer.payCost(player, false);
 		if (hammer.useDurability(cursor, damage) == null)
 			player.setItemOnCursor(null);
 		if (hammer.isFixall()) {
