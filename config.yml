@@ -1,4 +1,3 @@
-
 # for color codes use &
 
 # ways you can use the hammers to fix items set at least one to true
@@ -24,6 +23,13 @@ items:
   # fix hammers from this plugin
   # warning this can cause bugs (i.e. a hammer fixing itself then taking damage equal to the amount )
   hammers: false
+
+# sound played when a player uses a hammer
+sound:
+  # should a sound play true/false
+  enabled: true
+  # list of sounds can be found on the repair hammers plugins page on spigot https://www.spigotmc.org/resources/repair-hammers.44699/
+  sound: BLOCK_ANVIL_USE
 
 # messages if rightclick method is used
 rightclick:
@@ -63,7 +69,7 @@ help:
 
 # settings for shop
 shop:
-  # should the /rhshop command be enabled
+  # should the /rhshop command be enabled true/false
   enabled: true
   # message if the command is disabled
   disabledmessage: "&cHammer shop is disabled."
@@ -79,6 +85,9 @@ shop:
   # set to [] to add nothing
   addedlore:
     - "cost to buy $<cost>"
+
+#check for updates true/false
+update: true
 
 # section for error  messages
 error:
@@ -125,6 +134,7 @@ error:
     buy: "&cYou need $<cost> to buy this hammer."
   # error if a non-player tries a player only command
   sender: "&cYou must be a player to use this command."
+
 # here you can define lists of items to be fixed by the hammers
 # you can make as many lists as you want
 fixlist:
@@ -143,20 +153,20 @@ fixlist:
     - DIAMOND_HOE
     - DIAMOND_LEGGINGS
     - DIAMOND_PICKAXE
-    - DIAMOND_SPADE
+    - DIAMOND_SHOVEL
     - DIAMOND_SWORD
     - ELYTRA
     - FISHING_ROD
     - FLINT_AND_STEEL
-    - GOLD_AXE
-    - GOLD_BOOTS
-    - GOLD_CHESTPLATE
-    - GOLD_HELMET
-    - GOLD_HOE
-    - GOLD_LEGGINGS
-    - GOLD_PICKAXE
-    - GOLD_SPADE
-    - GOLD_SWORD
+    - GOLDEN_AXE
+    - GOLDEN_BOOTS
+    - GOLDEN_CHESTPLATE
+    - GOLDEN_HELMET
+    - GOLDEN_HOE
+    - GOLDEN_LEGGINGS
+    - GOLDEN_PICKAXE
+    - GOLDEN_SHOVEL
+    - GOLDEN_SWORD
     - IRON_AXE
     - IRON_BOOTS
     - IRON_CHESTPLATE
@@ -164,7 +174,7 @@ fixlist:
     - IRON_HOE
     - IRON_LEGGINGS
     - IRON_PICKAXE
-    - IRON_SPADE
+    - IRON_SHOVEL
     - IRON_SWORD
     - LEATHER_BOOTS
     - LEATHER_CHESTPLATE
@@ -175,18 +185,18 @@ fixlist:
     - STONE_AXE
     - STONE_HOE
     - STONE_PICKAXE
-    - STONE_SPADE
+    - STONE_SHOVEL
     - STONE_SWORD
     - TRIDENT
     - WOOD_AXE
     - WOOD_HOE
     - WOOD_PICKAXE
-    - WOOD_SPADE
+    - WOOD_SHOVEL
     - WOOD_SWORD
   # this list lets a hammer fix swords
   swords:
     - WOOD_SWORD
     - STONE_SWORD
     - IRON_SWORD
-    - GOLD_SWORD
+    - GOLDEN_SWORD
     - DIAMOND_SWORD
