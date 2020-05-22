@@ -90,7 +90,7 @@ public class DefaultHammer implements EditableHammer {
 			Iterator<Recipe> ri = plugin.getServer().recipeIterator();
 			while (ri.hasNext()) {
 				Recipe recp = ri.next();
-				if (recp.equals(recipe)) {
+				if (recp.getResult().equals(getHammerItem(1))) {
 					ri.remove();
 				}
 			}

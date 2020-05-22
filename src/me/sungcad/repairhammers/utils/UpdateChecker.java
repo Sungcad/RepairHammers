@@ -39,4 +39,8 @@ public class UpdateChecker {
 		}
 	}
 
+	public String getLatest() {
+		return latest;
+	}
+
 }

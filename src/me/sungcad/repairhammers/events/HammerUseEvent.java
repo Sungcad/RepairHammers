@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.Inventory;
 
 import me.sungcad.repairhammers.hammers.Hammer;
 
@@ -14,12 +15,18 @@ public class HammerUseEvent extends Event implements Cancellable {
 	Hammer hammer;
 	Player player;
 	int target;
+	Inventory inventory;
 
 	public HammerUseEvent(Hammer hammer, Player player, int target) {
+		this(hammer, player, target, player.getInventory());
+	}
+
+	public HammerUseEvent(Hammer hammer, Player player, int target, Inventory inventory) {
 		cancelled = false;
 		this.hammer = hammer;
 		this.player = player;
 		this.target = target;
+		this.inventory = inventory;
 	}
 
 	@Override
@@ -53,4 +60,7 @@ public class HammerUseEvent extends Event implements Cancellable {
 		target = slot;
 	}
 
+	public Inventory getInventory() {
+		return inventory;
+	}
 }

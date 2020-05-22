@@ -6,6 +6,8 @@ use:
   inventory: true
   # right click with the hammer in hand then with the item to fix
   rightclick: true
+  # fix items by puting them in an anvil
+  anvil: true
 
 # Set the items that can be fixable. enable one or more by setting them to true
 # Many items added by plugins are fixed the same way as default items in minecraft,

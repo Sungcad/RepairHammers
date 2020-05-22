@@ -12,6 +12,7 @@ import me.sungcad.repairhammers.utils.UpdateChecker;
 
 public class LoginListener implements Listener {
 	private final static String MESSAGE = ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "RepairHammers" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + " Update found download at https://www.spigotmc.org/resources/44699";
+	private final static String LINE2 = ChatColor.GRAY + "current version %s new version %s";
 
 	private UpdateChecker update;
 	private RepairHammerPlugin plugin;
@@ -30,6 +31,7 @@ public class LoginListener implements Listener {
 				public void run() {
 					if (update.checkForUpdates()) {
 						p.sendMessage(MESSAGE);
+						p.sendMessage(String.format(LINE2, plugin.getDescription().getVersion(), update.getLatest()));
 					}
 				}
 			}.runTaskAsynchronously(plugin);

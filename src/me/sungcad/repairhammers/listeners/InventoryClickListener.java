@@ -85,7 +85,7 @@ public class InventoryClickListener implements Listener {
 		}
 		if (plugin.getConfig().getBoolean("sound.enabled", false)) {
 			try {
-				Sound sound = Sound.valueOf(plugin.getConfig().getString("sound.sound", "BLOCK_ANVIL_USE"));
+				Sound sound = Sound.valueOf(plugin.getConfig().getString("sound.sound", "BLOCK_ANVIL_USE").toUpperCase());
 				player.playSound(player.getEyeLocation(), sound, 1, 1);
 			} catch (IllegalArgumentException iae) {
 				plugin.getLogger().warning("error unable to play sound " + this.plugin.getConfig().getString("sound.sound").toUpperCase());
