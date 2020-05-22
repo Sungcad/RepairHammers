@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -73,9 +74,7 @@ public class RightClickListener implements Listener {
 				damage = Math.min(hook.getDamage(target), hammer.getFixAmount(player.getInventory().getItem(slot)));
 			if (damage <= 0)
 				return;
-			if (hammer.canAfford(player, false)) {
-				hammer.payCost(player, false);
-			} else {
+			if (!hammer.canAfford(player, false)) {
 				player.sendMessage(translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.use").replace("<cost>", plugin.getFormat().format(hammer.getUseCost()))));
 				return;
 			}
@@ -83,6 +82,7 @@ public class RightClickListener implements Listener {
 			Bukkit.getPluginManager().callEvent(hue);
 			if (hue.isCancelled())
 				return;
+			hammer.payCost(player, false);
 			if (hammer.useDurability(player.getInventory().getItem(slot), damage) == null)
 				player.getInventory().setItem(slot, null);
 			if (hammer.isFixall()) {
@@ -93,6 +93,14 @@ public class RightClickListener implements Listener {
 				}
 			} else {
 				hook.fixItem(target, damage);
+			}
+			if (plugin.getConfig().getBoolean("sound.enabled", false)) {
+				try {
+					Sound sound = Sound.valueOf(plugin.getConfig().getString("sound.sound", "BLOCK_ANVIL_USE").toUpperCase());
+					player.playSound(player.getEyeLocation(), sound, 1, 1);
+				} catch (IllegalArgumentException iae) {
+					plugin.getLogger().warning("error unable to play sound " + this.plugin.getConfig().getString("sound.sound").toUpperCase());
+				}
 			}
 			hammer.getUseMessage().forEach(line -> player.sendMessage(translateAlternateColorCodes('&', line)));
 		} else {

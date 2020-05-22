@@ -6,6 +6,8 @@ use:
   inventory: true
   # right click with the hammer in hand then with the item to fix
   rightclick: true
+  # fix items by puting them in an anvil
+  anvil: true
 
 # Set the items that can be fixable. enable one or more by setting them to true
 # Many items added by plugins are fixed the same way as default items in minecraft,
@@ -23,6 +25,13 @@ items:
   # fix hammers from this plugin
   # warning this can cause bugs (i.e. a hammer fixing itself then taking damage equal to the amount )
   hammers: false
+
+# sound played when a player uses a hammer
+sound:
+  # should a sound play true/false
+  enabled: true
+  # list of sounds can be found on the repair hammers plugins page on spigot https://www.spigotmc.org/resources/repair-hammers.44699/
+  sound: BLOCK_ANVIL_USE
 
 # messages if rightclick method is used
 rightclick:
@@ -62,7 +71,7 @@ help:
 
 # settings for shop
 shop:
-  # should the /rhshop command be enabled
+  # should the /rhshop command be enabled true/false
   enabled: true
   # message if the command is disabled
   disabledmessage: "&cHammer shop is disabled."
@@ -78,8 +87,10 @@ shop:
   # set to [] to add nothing
   addedlore:
     - "cost to buy $<cost>"
-#check for updates
+
+#check for updates true/false
 update: true
+
 # section for error  messages
 error:
   # errors if a player tries to do something they don't have permission for.
@@ -125,6 +136,7 @@ error:
     buy: "&cYou need $<cost> to buy this hammer."
   # error if a non-player tries a player only command
   sender: "&cYou must be a player to use this command."
+
 # here you can define lists of items to be fixed by the hammers
 # you can make as many lists as you want
 fixlist:

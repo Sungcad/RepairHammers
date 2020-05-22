@@ -1,5 +1,5 @@
 /*
- * 
+ *
  *  Copyright (C) 2019  Sungcad
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import me.sungcad.repairhammers.commands.HammerTabCompleter;
 import me.sungcad.repairhammers.costs.VaultHook;
 import me.sungcad.repairhammers.hammers.HammerManager;
 import me.sungcad.repairhammers.itemhooks.CustomItemManager;
+import me.sungcad.repairhammers.listeners.AnvilListener;
 import me.sungcad.repairhammers.listeners.CraftingListener;
 import me.sungcad.repairhammers.listeners.InventoryClickListener;
 import me.sungcad.repairhammers.listeners.LoginListener;
@@ -103,6 +104,7 @@ public class RepairHammerPlugin extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new CraftingListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new InventoryClickListener(this, getConfig().getBoolean("use.inventory", true)), this);
 		Bukkit.getPluginManager().registerEvents(new RightClickListener(this, getConfig().getBoolean("use.rightclick", false)), this);
+		Bukkit.getPluginManager().registerEvents(new AnvilListener(this, getConfig().getBoolean("use.anvil", false)), this);
 		Bukkit.getPluginManager().registerEvents(new PlaceListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new LoginListener(this), this);
 	}

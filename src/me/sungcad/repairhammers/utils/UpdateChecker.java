@@ -14,6 +14,7 @@ public class UpdateChecker {
 	private URL url;
 	private String latest;
 	private RepairHammerPlugin plugin;
+	private boolean error = false;
 
 	public UpdateChecker(RepairHammerPlugin plugin) {
 		this.plugin = plugin;
@@ -21,12 +22,12 @@ public class UpdateChecker {
 		try {
 			url = new URL("https://api.spigotmc.org/legacy/update.php?resource=44699");
 		} catch (MalformedURLException e) {
+			error = true;
 		}
 	}
 
-
 	public boolean checkForUpdates() {
-		if (!plugin.getConfig().getBoolean("update", true))
+		if (!plugin.getConfig().getBoolean("update", true) || error)
 			return false;
 		try {
 			URLConnection con = url.openConnection();
@@ -36,6 +37,10 @@ public class UpdateChecker {
 			plugin.getLogger().warning("error checking for update");
 			return plugin.getDescription().getVersion().equals(latest);
 		}
+	}
+
+	public String getLatest() {
+		return latest;
 	}
 
 }
