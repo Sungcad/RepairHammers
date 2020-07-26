@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 
 public class CraftingListener implements Listener {
-    RepairHammerPlugin plugin;
+    final RepairHammerPlugin plugin;
 
     public CraftingListener(RepairHammerPlugin plugin) {
         this.plugin = plugin;

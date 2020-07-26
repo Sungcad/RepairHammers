@@ -11,12 +11,12 @@ import org.bukkit.inventory.ItemStack;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 
 public class CustomItemManager {
-    List<CustomItemHook> hooks;
-    RepairHammerPlugin plugin;
+    final List<CustomItemHook> hooks;
+    final RepairHammerPlugin plugin;
 
     public CustomItemManager(RepairHammerPlugin plugin) {
         this.plugin = plugin;
-        hooks = new LinkedList<CustomItemHook>();
+        hooks = new LinkedList<>();
         addItemHook(new DefaultItemHook(plugin.getConfig().getBoolean("items.minecraft", true)));
         addItemHook(new HammerItemHook(plugin, plugin.getConfig().getBoolean("items.rpgitems", false)));
         addItemHook(new AdditionsAPIHook(plugin.getConfig().getBoolean("items.additionsapi", false)));

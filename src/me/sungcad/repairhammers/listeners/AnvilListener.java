@@ -1,10 +1,12 @@
+/*
+ * Copyright (C) 2020  Sungcad
+ */
 package me.sungcad.repairhammers.listeners;
-
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import me.sungcad.repairhammers.utils.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -22,7 +24,7 @@ import me.sungcad.repairhammers.hammers.Hammer;
 import me.sungcad.repairhammers.itemhooks.CustomItemHook;
 
 public class AnvilListener implements Listener {
-	RepairHammerPlugin plugin;
+	final RepairHammerPlugin plugin;
 	private static boolean enabled;
 	private final List<Player> cooldowns = new ArrayList<>();
 
@@ -47,7 +49,7 @@ public class AnvilListener implements Listener {
 			return;
 		if (!hammer.canFix(slot0) || !hammer.canUse(player)) {
 			if (!cooldowns.contains(player)) {
-				hammer.getCantUseMessage().forEach(s -> player.sendMessage(translateAlternateColorCodes('&', s)));
+				hammer.getCantUseMessage().forEach(s -> player.sendMessage(ColorUtil.translateColors(s)));
 				cooldowns.add(player);
 				new BukkitRunnable() {
 					@Override
@@ -91,7 +93,7 @@ public class AnvilListener implements Listener {
 			return;
 		Player player = (Player) e.getWhoClicked();
 		if (!hammer.canAfford(player, false)) {
-			player.sendMessage(translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.use").replace("<cost>", plugin.getFormat().format(hammer.getUseCost()))));
+			player.sendMessage(ColorUtil.translateColors(plugin.getConfig().getString("error.bal.use").replace("<cost>", plugin.getFormat().format(hammer.getUseCost()))));
 			e.setCancelled(true);
 			return;
 		}
@@ -105,12 +107,13 @@ public class AnvilListener implements Listener {
 		if (plugin.getConfig().getBoolean("sound.enabled", false)) {
 			try {
 				Sound sound = Sound.valueOf(plugin.getConfig().getString("sound.sound", "BLOCK_ANVIL_USE").toUpperCase());
+				player.stopSound(sound);
 				player.playSound(player.getEyeLocation(), sound, 1, 1);
 			} catch (IllegalArgumentException iae) {
 				plugin.getLogger().warning("error unable to play sound " + this.plugin.getConfig().getString("sound.sound").toUpperCase());
 			}
 		}
-		hammer.getUseMessage().forEach(line -> player.sendMessage(translateAlternateColorCodes('&', line)));
+		hammer.getUseMessage().forEach(line -> player.sendMessage(ColorUtil.translateColors(line)));
 		ItemStack slot0 = ai.getItem(0);
 		ItemStack slot1 = ai.getItem(1);
 		ItemStack slot2 = ai.getItem(2);
@@ -122,7 +125,6 @@ public class AnvilListener implements Listener {
 			damage = Math.min(hook.getDamage(slot0), hammer.getFixAmount(slot1));
 		if (hammer.useDurability(ai.getItem(1), damage) == null)
 			ai.setItem(1, null);
-		slot1 = ai.getItem(1);
 		ai.setItem(0, slot2);
 		ai.setItem(2, null);
 		if (hammer.isFixall()) {

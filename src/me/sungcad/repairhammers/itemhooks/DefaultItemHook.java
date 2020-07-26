@@ -23,7 +23,7 @@ public class DefaultItemHook implements CustomItemHook {
     public ItemStack fixItem(ItemStack item, int amount) {
         ItemMeta meta = item.getItemMeta();
         ((Damageable) meta).setDamage(Math.max(0, ((Damageable) item.getItemMeta()).getDamage() - amount));
-        item.setItemMeta((ItemMeta) meta);
+        item.setItemMeta(meta);
         return item;
     }
 

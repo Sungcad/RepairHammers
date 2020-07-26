@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public enum Files {
 	HAMMER("hammers.yml");
 
-	String name;
+	final String name;
 	File file;
 	YamlConfiguration config;
 
@@ -24,7 +24,7 @@ public enum Files {
 		return config;
 	}
 
-	public boolean load(RepairHammerPlugin plugin) {
+	public void load(RepairHammerPlugin plugin) {
 		file = new File(plugin.getDataFolder(), name);
 		if (!file.exists()) {
 			file.getParentFile().mkdirs();
@@ -37,12 +37,10 @@ public enum Files {
 		} catch (IOException | InvalidConfigurationException e) {
 			plugin.getLogger().severe("Error loading file " + name);
 			e.printStackTrace();
-			return false;
 		}
-		return true;
 	}
 
-	public boolean reload(RepairHammerPlugin plugin) {
+	public void reload(RepairHammerPlugin plugin) {
 		file = new File(plugin.getDataFolder(), name);
 		config = new YamlConfiguration();
 		try {
@@ -51,9 +49,7 @@ public enum Files {
 		} catch (IOException | InvalidConfigurationException e) {
 			plugin.getLogger().severe("Error loading file " + name);
 			e.printStackTrace();
-			return false;
 		}
-		return true;
 	}
 
 	public void save(RepairHammerPlugin plugin) {

@@ -5,7 +5,6 @@ package me.sungcad.repairhammers.itemhooks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
-
 import think.rpgitems.api.RPGItems;
 import think.rpgitems.item.RPGItem;
 

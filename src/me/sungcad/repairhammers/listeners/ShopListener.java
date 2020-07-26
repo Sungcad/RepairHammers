@@ -5,21 +5,22 @@ package me.sungcad.repairhammers.listeners;
 
 import java.util.Optional;
 
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+import me.sungcad.repairhammers.utils.ColorUtil;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 import me.sungcad.repairhammers.events.HammerBuyEvent;
 import me.sungcad.repairhammers.gui.ShopHolder;
 import me.sungcad.repairhammers.hammers.Hammer;
 
 public class ShopListener implements Listener {
-	RepairHammerPlugin plugin;
+	final RepairHammerPlugin plugin;
 
 	public ShopListener(RepairHammerPlugin plugin) {
 		this.plugin = plugin;
@@ -41,13 +42,11 @@ public class ShopListener implements Listener {
 			HammerBuyEvent hbe = new HammerBuyEvent(hammer, player);
 			Bukkit.getPluginManager().callEvent(hbe);
 			if (!hbe.isCancelled()) {
-				player.closeInventory();
 				hammer.payCost(player, true);
 				giveHammer(player, hammer.getHammerItem(1));
 			}
 		} else {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("error.bal.buy").replace("<cost>", plugin.getFormat().format(hammer.getBuyCost()))));
-			return;
+			player.sendMessage(ColorUtil.translateColors(plugin.getConfig().getString("error.bal.buy").replace("<cost>", plugin.getFormat().format(hammer.getBuyCost()))));
 		}
 	}
 

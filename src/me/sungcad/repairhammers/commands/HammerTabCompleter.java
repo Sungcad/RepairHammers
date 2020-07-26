@@ -17,7 +17,7 @@ import me.sungcad.repairhammers.RepairHammerPlugin;
 
 public class HammerTabCompleter implements TabCompleter {
 	private final List<String> arg1 = Arrays.asList("buy", "give", "help", "info", "list", "reload", "shop", "debug");
-	private RepairHammerPlugin plugin;
+	private final RepairHammerPlugin plugin;
 
 	public HammerTabCompleter(RepairHammerPlugin plugin) {
 		this.plugin = plugin;
@@ -25,18 +25,18 @@ public class HammerTabCompleter implements TabCompleter {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		if (args.length == 0 || (args.length == 1 && !arg1.contains(args[0])))
 			StringUtil.copyPartialMatches(args[0], arg1, list);
-		else if (args.length >= 1 && args[0].equalsIgnoreCase("give")) {
-			List<String> players = new ArrayList<String>();
+		else if (args[0].equalsIgnoreCase("give")) {
+			List<String> players = new ArrayList<>();
 			Bukkit.getOnlinePlayers().forEach(p -> players.add(p.getName()));
 			if (args.length == 1)
 				list.addAll(players);
 			else if (args.length == 2 && !players.contains(args[1])) {
 				StringUtil.copyPartialMatches(args[1], players, list);
 			} else {
-				List<String> hammers = new ArrayList<String>();
+				List<String> hammers = new ArrayList<>();
 				plugin.getHammerManager().getHammers().forEach(hammer -> {
 					if (hammer.canGive(sender))
 						hammers.add(hammer.getName());
@@ -47,8 +47,8 @@ public class HammerTabCompleter implements TabCompleter {
 					StringUtil.copyPartialMatches(args[2], hammers, list);
 				}
 			}
-		} else if (args.length >= 1 && args[0].equalsIgnoreCase("buy")) {
-			List<String> hammers = new ArrayList<String>();
+		} else if (args[0].equalsIgnoreCase("buy")) {
+			List<String> hammers = new ArrayList<>();
 			plugin.getHammerManager().getHammers().forEach(hammer -> {
 				if (hammer.canBuy(sender))
 					hammers.add(hammer.getName());

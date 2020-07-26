@@ -10,7 +10,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 
 public class PlaceListener implements Listener {
-    RepairHammerPlugin plugin;
+    final RepairHammerPlugin plugin;
 
     public PlaceListener(RepairHammerPlugin plugin) {
         this.plugin = plugin;

@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2020  Sungcad
+ */
 package me.sungcad.repairhammers.events;
 
 import org.bukkit.entity.Player;
@@ -11,10 +14,11 @@ public class HammerBuyEvent extends Event implements Cancellable {
 	private static final HandlerList HANDLERS = new HandlerList();
 
 	boolean cancelled;
-	Hammer hammer;
-	Player player;
+	final Hammer hammer;
+	final Player player;
 
 	public HammerBuyEvent(Hammer hammer, Player player) {
+		cancelled = false;
 		this.hammer = hammer;
 		this.player = player;
 	}
@@ -30,8 +34,8 @@ public class HammerBuyEvent extends Event implements Cancellable {
 	}
 
 	@Override
-	public void setCancelled(boolean cancell) {
-		cancelled = cancell;
+	public void setCancelled(boolean cancel) {
+		cancelled = cancel;
 	}
 
 	public Hammer getHammer() {

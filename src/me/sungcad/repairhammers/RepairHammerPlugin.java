@@ -20,7 +20,6 @@ package me.sungcad.repairhammers;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.concurrent.Callable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -66,6 +65,7 @@ public class RepairHammerPlugin extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		hammers.unload();
 		plugin = null;
 	}
 
@@ -111,12 +111,7 @@ public class RepairHammerPlugin extends JavaPlugin {
 
 	void setupMetrics() {
 		Metrics metrics = new Metrics(this, 7430);
-		metrics.addCustomChart(new Metrics.SimplePie("number_of_hammers", new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				return String.valueOf(hammers.getHammers().size());
-			}
-		}));
+		metrics.addCustomChart(new Metrics.SimplePie("number_of_hammers", () -> String.valueOf(hammers.getHammers().size())));
 	}
 
 	public static RepairHammerPlugin getPlugin() {

@@ -7,19 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 
 import me.sungcad.repairhammers.Files;
 import me.sungcad.repairhammers.RepairHammerPlugin;
 
 public class HammerManager {
-	List<Hammer> hammers;
-	RepairHammerPlugin plugin;
+	private final List<Hammer> hammers;
+	private final RepairHammerPlugin plugin;
+	final NamespacedKey key;
 
 	public HammerManager(RepairHammerPlugin plugin) {
 		this.plugin = plugin;
-		hammers = new ArrayList<Hammer>();
-		Files.HAMMER.getConfig().getKeys(false).forEach(cnf -> hammers.add(new DefaultHammer(cnf, Files.HAMMER.getConfig().getConfigurationSection(cnf), plugin)));
+		key = new NamespacedKey(plugin, "hammer");
+		hammers = new ArrayList<>();
+		Files.HAMMER.getConfig().getKeys(false).forEach(cnf -> hammers.add(new DefaultHammer(cnf, Files.HAMMER.getConfig().getConfigurationSection(cnf), plugin, key)));
 		plugin.getLogger().info(hammers.size() + " hammers have been loaded.");
 	}
 
@@ -32,7 +35,7 @@ public class HammerManager {
 	}
 
 	public List<Hammer> getHammers() {
-		return new ArrayList<Hammer>(hammers);
+		return new ArrayList<>(hammers);
 	}
 
 	public void addHammer(Hammer hammer) {
@@ -44,14 +47,24 @@ public class HammerManager {
 	}
 
 	public void reload() {
-		List<Hammer> newhammers = new ArrayList<Hammer>(hammers);
+		List<Hammer> newhammers = new ArrayList<>(hammers);
 		for (Hammer hammer : newhammers) {
 			if (hammer instanceof DefaultHammer) {
 				hammers.remove(hammer);
 				((DefaultHammer) hammer).removeRecipe();
 			}
 		}
-		Files.HAMMER.getConfig().getKeys(false).stream().forEach(cnf -> hammers.add(new DefaultHammer(cnf, Files.HAMMER.getConfig().getConfigurationSection(cnf), plugin)));
+		Files.HAMMER.getConfig().getKeys(false).forEach(cnf -> hammers.add(new DefaultHammer(cnf, Files.HAMMER.getConfig().getConfigurationSection(cnf), plugin, key)));
 		plugin.getLogger().info(hammers.size() + " hammers have been loaded.");
+	}
+
+	public void unload(){
+		List<Hammer> newhammers = new ArrayList<>(hammers);
+		for (Hammer hammer : newhammers) {
+			hammers.remove(hammer);
+			if(hammer instanceof CraftableHammer){
+				((CraftableHammer)hammer).removeRecipe();
+			}
+		}
 	}
 }

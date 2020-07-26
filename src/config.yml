@@ -1,5 +1,6 @@
-# for color codes use &
-
+# for old color codes use &
+# for Hex color codes use #
+#
 # ways you can use the hammers to fix items set at least one to true
 use:
   # fix items by using a hammer on them from your inventory
@@ -11,10 +12,10 @@ use:
 
 # Set the items that can be fixable. enable one or more by setting them to true
 # Many items added by plugins are fixed the same way as default items in minecraft,
-# these items should be able to be fixed by the section mincraft: true
+# these items should be able to be fixed by the section minecraft: true
 # Some plugins that handle them some other way such as RPGItems, AdditionsAPI, and RepairHammers.
 # if there is a plugin that adds items that can not be fixed in one of these groups
-# send me a message and if it is possable I can add it to the plugin.
+# send me a message and if it is possible I can add it to the plugin.
 items:
   # fix all default items and many that are added by other plugins
   minecraft: true
@@ -95,7 +96,7 @@ update: true
 error:
   # errors if a player tries to do something they don't have permission for.
   np:
-    # error messeage when a player doesn't have permission to veiw /hammers or /hammers help.
+    # error message when a player doesn't have permission to veiw /hammers or /hammers help.
     help: "&cYou don't have permission."
     # error when a player tries to reload the config.
     reload: "&cYou don't have permission."
@@ -142,59 +143,71 @@ error:
 fixlist:
   # this list has all the default items that can be fixed
   all:
-    - BOW
-    - CHAINMAIL_BOOTS
-    - CHAINMAIL_CHESTPLATE
-    - CHAINMAIL_HELMET
-    - CHAINMAIL_LEGGINGS
-    - CROSSBOW
-    - DIAMOND_AXE
-    - DIAMOND_BOOTS
-    - DIAMOND_CHESTPLATE
-    - DIAMOND_HELMET
-    - DIAMOND_HOE
-    - DIAMOND_LEGGINGS
-    - DIAMOND_PICKAXE
-    - DIAMOND_SHOVEL
-    - DIAMOND_SWORD
-    - ELYTRA
-    - FISHING_ROD
-    - FLINT_AND_STEEL
-    - GOLDEN_AXE
-    - GOLDEN_BOOTS
-    - GOLDEN_CHESTPLATE
-    - GOLDEN_HELMET
-    - GOLDEN_HOE
-    - GOLDEN_LEGGINGS
-    - GOLDEN_PICKAXE
-    - GOLDEN_SHOVEL
-    - GOLDEN_SWORD
-    - IRON_AXE
-    - IRON_BOOTS
-    - IRON_CHESTPLATE
-    - IRON_HELMET
-    - IRON_HOE
-    - IRON_LEGGINGS
-    - IRON_PICKAXE
+    - TURTLE_HELMET
     - IRON_SHOVEL
+    - IRON_PICKAXE
+    - IRON_AXE
+    - FLINT_AND_STEEL
+    - BOW
     - IRON_SWORD
-    - LEATHER_BOOTS
-    - LEATHER_CHESTPLATE
-    - LEATHER_HELMET
-    - LEATHER_LEGGINGS
-    - SHEARS
-    - SHIELD
-    - STONE_AXE
-    - STONE_HOE
-    - STONE_PICKAXE
-    - STONE_SHOVEL
+    - WOODEN_SWORD
+    - WOODEN_SHOVEL
+    - WOODEN_PICKAXE
+    - WOODEN_AXE
     - STONE_SWORD
+    - STONE_SHOVEL
+    - STONE_PICKAXE
+    - STONE_AXE
+    - DIAMOND_SWORD
+    - DIAMOND_SHOVEL
+    - DIAMOND_PICKAXE
+    - DIAMOND_AXE
+    - GOLDEN_SWORD
+    - GOLDEN_SHOVEL
+    - GOLDEN_PICKAXE
+    - GOLDEN_AXE
+    - NETHERITE_SWORD
+    - NETHERITE_SHOVEL
+    - NETHERITE_PICKAXE
+    - NETHERITE_AXE
+    - WOODEN_HOE
+    - STONE_HOE
+    - IRON_HOE
+    - DIAMOND_HOE
+    - GOLDEN_HOE
+    - NETHERITE_HOE
+    - LEATHER_HELMET
+    - LEATHER_CHESTPLATE
+    - LEATHER_LEGGINGS
+    - LEATHER_BOOTS
+    - CHAINMAIL_HELMET
+    - CHAINMAIL_CHESTPLATE
+    - CHAINMAIL_LEGGINGS
+    - CHAINMAIL_BOOTS
+    - IRON_HELMET
+    - IRON_CHESTPLATE
+    - IRON_LEGGINGS
+    - IRON_BOOTS
+    - DIAMOND_HELMET
+    - DIAMOND_CHESTPLATE
+    - DIAMOND_LEGGINGS
+    - DIAMOND_BOOTS
+    - GOLDEN_HELMET
+    - GOLDEN_CHESTPLATE
+    - GOLDEN_LEGGINGS
+    - GOLDEN_BOOTS
+    - NETHERITE_HELMET
+    - NETHERITE_CHESTPLATE
+    - NETHERITE_LEGGINGS
+    - NETHERITE_BOOTS
+    - FISHING_ROD
+    - SHEARS
+    - CARROT_ON_A_STICK
+    - WARPED_FUNGUS_ON_A_STICK
+    - SHIELD
+    - ELYTRA
     - TRIDENT
-    - WOOD_AXE
-    - WOOD_HOE
-    - WOOD_PICKAXE
-    - WOOD_SHOVEL
-    - WOOD_SWORD
+    - CROSSBOW
   # this list lets a hammer fix swords
   swords:
     - WOOD_SWORD
@@ -202,3 +215,4 @@ fixlist:
     - IRON_SWORD
     - GOLDEN_SWORD
     - DIAMOND_SWORD
+    - NETHERITE_SWORD

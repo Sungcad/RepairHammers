@@ -15,7 +15,7 @@ public class HammerItemHook implements CustomItemHook {
         enabled = enable;
     }
 
-    RepairHammerPlugin plugin;
+    final RepairHammerPlugin plugin;
 
     public HammerItemHook(RepairHammerPlugin plugin, boolean enable) {
         this.plugin = plugin;

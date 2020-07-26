@@ -4,12 +4,12 @@
 package me.sungcad.repairhammers.hammers;
 
 import static org.bukkit.ChatColor.GRAY;
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import me.sungcad.repairhammers.utils.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -34,9 +34,11 @@ import me.sungcad.repairhammers.costs.MoneyCost;
 import me.sungcad.repairhammers.costs.NoneCost;
 import me.sungcad.repairhammers.costs.XPCost;
 import me.sungcad.repairhammers.itemhooks.AdditionsAPIHook;
+import org.bukkit.persistence.PersistentDataType;
 
-public class DefaultHammer implements EditableHammer {
+public class DefaultHammer implements EditableHammer , CraftableHammer{
 	private final String name;
+	private final NamespacedKey key;
 	private boolean consume, destroy, enchanted, fixall, percent;
 	private String displayname, listcan, listcant;
 	private List<String> cantuse, fixlist, lore, use;
@@ -44,14 +46,16 @@ public class DefaultHammer implements EditableHammer {
 	private double buycost, usecost;
 	private Material type;
 	private Cost buycosttype, usecosttype;
-	private RepairHammerPlugin plugin;
-	ShapedRecipe recipe;
+	private final RepairHammerPlugin plugin;
+	private ShapedRecipe recipe;
 
-	protected DefaultHammer(String name, ConfigurationSection config, RepairHammerPlugin plugin) {
+
+	protected DefaultHammer(String name, ConfigurationSection config, RepairHammerPlugin plugin, NamespacedKey key) {
 		this.name = name;
 		this.plugin = plugin;
+		this.key = key;
 		setPercent(config.getString("amount", "50%").endsWith("%"));
-		setFixAmount(Integer.valueOf(config.getString("amount", "50%").replace("%", "")));
+		setFixAmount(Integer.parseInt(config.getString("amount", "50%").replace("%", "")));
 		setConsume(config.getBoolean("consume", true));
 		setDestroy(config.getBoolean("destroy", true));
 		setEnchanted(config.getBoolean("enchanted", true));
@@ -97,9 +101,15 @@ public class DefaultHammer implements EditableHammer {
 		}
 	}
 
-	protected DefaultHammer(String name, RepairHammerPlugin plugin) {
+	@Override
+	public Recipe getRecipe() {
+		return recipe;
+	}
+
+	protected DefaultHammer(String name, RepairHammerPlugin plugin, NamespacedKey key) {
 		this.name = name;
 		this.plugin = plugin;
+		this.key = key;
 		setEnchanted(true);
 		setFixAll(false);
 		setPercent(true);
@@ -109,14 +119,14 @@ public class DefaultHammer implements EditableHammer {
 		setUseCost(0, "n");
 		setBuyCost(0, "n");
 		setShopLocation(-1, -1);
-		setFixlist(new ArrayList<String>());
+		setFixlist(new ArrayList<>());
 		setMaterial(Material.IRON_INGOT);
 		setItemName("Hammer");
 		setBuyListCan("&2Hammer &7fix one item by 50%");
 		setBuyListCant("&4Hammer &7fix one item by 50%");
-		setCantUseMessage(new ArrayList<String>());
-		setLore(new ArrayList<String>());
-		setUseMessage(new ArrayList<String>());
+		setCantUseMessage(new ArrayList<>());
+		setLore(new ArrayList<>());
+		setUseMessage(new ArrayList<>());
 	}
 
 	@Override
@@ -133,9 +143,9 @@ public class DefaultHammer implements EditableHammer {
 	public boolean canFix(ItemStack item) {
 		if (item != null) {
 			if (plugin.getCustomItemManager().getHook(item) instanceof AdditionsAPIHook) {
-				return fixlist.stream().filter(str -> str.equals(new CustomItemStack(item).getCustomItem().getIdName()) || str.equals(item.getType().toString())).findAny().isPresent();
+				return fixlist.stream().anyMatch(str -> str.equals(new CustomItemStack(item).getCustomItem().getIdName()) || str.equals(item.getType().toString()));
 			}
-			return fixlist.stream().filter(str -> str.equals(item.getType().toString())).findAny().isPresent();
+			return fixlist.stream().anyMatch(str -> str.equals(item.getType().toString()));
 		}
 		return false;
 	}
@@ -152,16 +162,7 @@ public class DefaultHammer implements EditableHammer {
 
 	@Override
 	public boolean equals(ItemStack item) {
-		if (item != null) {
-			if (type.equals(item.getType())) {
-				if (displayname.equals(item.getItemMeta().getDisplayName())) {
-					if (item.getItemMeta().getLore().containsAll(lore)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
+			return item!=null && item.hasItemMeta() && item.getItemMeta().getPersistentDataContainer().getOrDefault(key, PersistentDataType.STRING, "").equals(name);
 	}
 
 	@Override
@@ -199,7 +200,6 @@ public class DefaultHammer implements EditableHammer {
 			try {
 				return Integer.parseInt(line);
 			} catch (NumberFormatException e) {
-
 			}
 		}
 		return fixamount;
@@ -211,7 +211,7 @@ public class DefaultHammer implements EditableHammer {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(displayname);
 		if (consume) {
-			List<String> newlore = new ArrayList<String>(lore);
+			List<String> newlore = new ArrayList<>(lore);
 			newlore.add(GRAY.toString() + fixamount + "/" + fixamount);
 			meta.setLore(newlore);
 		} else
@@ -220,6 +220,7 @@ public class DefaultHammer implements EditableHammer {
 			meta.addEnchant(Enchantment.DURABILITY, 1, true);
 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		}
+		meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, name);
 		item.setItemMeta(meta);
 		if (item instanceof Damageable)
 			((Damageable) item).setDamage(damage);
@@ -285,7 +286,7 @@ public class DefaultHammer implements EditableHammer {
 	public void reload() {
 		ConfigurationSection config = Files.HAMMER.getConfig().getConfigurationSection(name);
 		setPercent(config.getString("amount", "50%").endsWith("%"));
-		setFixAmount(Integer.valueOf(config.getString("amount", "50%").replace("%", "")));
+		setFixAmount(Integer.parseInt(config.getString("amount", "50%").replace("%", "")));
 		setConsume(config.getBoolean("consume", true));
 		setDestroy(config.getBoolean("destroy", true));
 		setEnchanted(config.getBoolean("enchanted", true));
@@ -364,18 +365,18 @@ public class DefaultHammer implements EditableHammer {
 
 	@Override
 	public void setBuyListCan(String listcan) {
-		this.listcan = translateAlternateColorCodes('&', listcan);
+		this.listcan = ColorUtil.translateColors(listcan);
 	}
 
 	@Override
 	public void setBuyListCant(String listcant) {
-		this.listcant = translateAlternateColorCodes('&', listcant);
+		this.listcant = ColorUtil.translateColors(listcant);
 	}
 
 	@Override
 	public void setCantUseMessage(List<String> cantuse) {
-		this.cantuse = new ArrayList<String>(cantuse.size());
-		cantuse.forEach(line -> this.cantuse.add(translateAlternateColorCodes('&', line)));
+		this.cantuse = new ArrayList<>(cantuse.size());
+		cantuse.forEach(line -> this.cantuse.add(ColorUtil.translateColors(line)));
 	}
 
 	@Override
@@ -418,13 +419,13 @@ public class DefaultHammer implements EditableHammer {
 
 	@Override
 	public void setItemName(String displayname) {
-		this.displayname = translateAlternateColorCodes('&', displayname);
+		this.displayname = ColorUtil.translateColors(displayname);
 	}
 
 	@Override
 	public void setLore(List<String> lore) {
-		this.lore = new ArrayList<String>(lore.size());
-		lore.forEach(line -> this.lore.add(translateAlternateColorCodes('&', line)));
+		this.lore = new ArrayList<>(lore.size());
+		lore.forEach(line -> this.lore.add(ColorUtil.translateColors(line)));
 	}
 
 	@Override
@@ -480,8 +481,8 @@ public class DefaultHammer implements EditableHammer {
 
 	@Override
 	public void setUseMessage(List<String> use) {
-		this.use = new ArrayList<String>(use.size());
-		use.forEach(line -> this.use.add(translateAlternateColorCodes('&', line)));
+		this.use = new ArrayList<>(use.size());
+		use.forEach(line -> this.use.add(ColorUtil.translateColors(line)));
 	}
 
 	@Override
@@ -500,8 +501,7 @@ public class DefaultHammer implements EditableHammer {
 							hammer.setAmount(hammer.getAmount() - 1);
 							left = fixamount;
 						} else {
-							hammer = null;
-							return hammer;
+							return null;
 						}
 					} else {
 						left = 0;
@@ -520,11 +520,6 @@ public class DefaultHammer implements EditableHammer {
 			}
 		}
 		return hammer;
-	}
-
-	@Override
-	public void setData(short data) {
-		damage = data;
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class UpdateChecker {
 
 	private URL url;
 	private String latest;
-	private RepairHammerPlugin plugin;
+	private final RepairHammerPlugin plugin;
 	private boolean error = false;
 
 	public UpdateChecker(RepairHammerPlugin plugin) {

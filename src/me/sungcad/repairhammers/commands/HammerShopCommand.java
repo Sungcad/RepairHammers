@@ -3,7 +3,7 @@
  */
 package me.sungcad.repairhammers.commands;
 
-import org.bukkit.ChatColor;
+import me.sungcad.repairhammers.utils.ColorUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,8 +14,8 @@ import me.sungcad.repairhammers.gui.ShopHolder;
 
 public class HammerShopCommand implements CommandExecutor {
 
-    RepairHammerPlugin plugin;
-    ShopHolder shopholder;
+    final RepairHammerPlugin plugin;
+    final ShopHolder shopholder;
 
     public HammerShopCommand(RepairHammerPlugin plugin) {
         this.plugin = plugin;
@@ -29,10 +29,10 @@ public class HammerShopCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 player.openInventory(shopholder.getInventory(player));
             } else {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("error.sender")));
+                sender.sendMessage(ColorUtil.translateColors(plugin.getConfig().getString("error.sender")));
             }
         } else {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("shop.disabledmessage")));
+            sender.sendMessage(ColorUtil.translateColors(plugin.getConfig().getString("shop.disabledmessage")));
         }
         return true;
     }

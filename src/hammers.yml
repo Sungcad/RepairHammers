@@ -5,7 +5,7 @@
 #  type: item the hammer should be
 #  enchanted: should the hammer have the enchanted glow
 #  amount: how much should the hammer fix
-#  consume: should the hammer consumed durablity when used, doesn't work for percentage hammers
+#  consume: should the hammer consumed durability when used, doesn't work for percentage hammers
 #  destroy: should the hammer be destroyed when used
 #  crafting:
 #    craftable: set to true to enable crafting the hammer
@@ -36,7 +36,7 @@
 #this hammer is test1 so to give it in game the command would be /rh give <player> test1
 test1:
   #name is the name the hammer item will have in game
-  name: '&1Test hammer number 1'
+  name: '#000fffTest #33ff00hammer #eeaa66number 1'
   #type is what item the hammer is
   type: IRON_INGOT
   #should the hammer glow
@@ -47,7 +47,7 @@ test1:
   #or you can have a percent
   #amount: 50%
   amount: 50%
-  #should the hammer have a durability that is cunsumed as it is used
+  #should the hammer have a durability that is consumed as it is used
   #if hammer has a percent for its fix amount consume will always be false
   #true - hammer can fix up to its fix amount across any number of items
   #false - a hammer always fixes its fix amount
@@ -71,7 +71,7 @@ test1:
       #bottom line of the recipe make sure it is 3 characters 
       3: " s "
     #set the material of the items needed to craft the hammer
-    #all letters that are in the shape should have a matterial set
+    #all letters that are in the shape should have a material set
     material:
       i: IRON_INGOT
       s: STICK
@@ -92,7 +92,7 @@ test1:
       buy: money
       #currency to use the hammer
       use: none
-  #shop settiing are only used if shop.default is set to false in the config.yml
+  #shop setting are only used if shop.default is set to false in the config.yml
   shop:
     #the top row is 0
     #should be a value between 0 and one less than shop.size from config.yml
@@ -141,14 +141,14 @@ hammer2:
   consume: true
   destroy: true
   crafting:
-    craftable: false
+    craftable: true
     shape:
       1: "ii "
       2: "si "
       3: "   "
     material:
       i: IRON_INGOT
-      s: STICKe
+      s: STICK
   cost:
     buy: 1000.0
     use: 0.0
@@ -172,7 +172,7 @@ hammer2:
 
 #here is the third hammer
 swordhammer1:
-  name: 'Sword hammer'
+  name: '&fSword hammer'
   type: IRON_INGOT
   enchanted: true
   amount: 100%

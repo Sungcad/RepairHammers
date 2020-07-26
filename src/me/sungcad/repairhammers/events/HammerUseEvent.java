@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2020  Sungcad
+ */
 package me.sungcad.repairhammers.events;
 
 import org.bukkit.entity.Player;
@@ -12,10 +15,10 @@ public class HammerUseEvent extends Event implements Cancellable {
 	private static final HandlerList HANDLERS = new HandlerList();
 
 	boolean cancelled;
-	Hammer hammer;
-	Player player;
+	final Hammer hammer;
+	final Player player;
 	int target;
-	Inventory inventory;
+	final Inventory inventory;
 
 	public HammerUseEvent(Hammer hammer, Player player, int target) {
 		this(hammer, player, target, player.getInventory());
